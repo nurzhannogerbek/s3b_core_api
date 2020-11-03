@@ -125,6 +125,7 @@ deploy: &deploy
             S3_BUCKET: $S3_BUCKET
             LOCAL_PATH: '$(pwd)'
             EXTRA_ARGS: '--exclude=* --include=*.graphql'
+            DELETE_FLAG: 'true'
             DEBUG: 'true'
         - pipe: atlassian/aws-sam-deploy:0.5.2
           variables:
