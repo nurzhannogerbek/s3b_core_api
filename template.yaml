@@ -1,0 +1,1253 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Parameters:
+    EnvironmentName:
+        Type: String
+        Default: Test
+    ChatServiceStackName:
+        Type: String
+        Default: 3beepChatService
+    UserServiceStackName:
+        Type: String
+        Default: 3beepUserService
+    S3Bucket:
+        Type: String
+Conditions:
+    IsProductionEnvironment:
+        Fn::Equals: [Ref: EnvironmentName, "Prod"]
+Resources:
+    GraphQLApi:
+        Type: AWS::AppSync::GraphQLApi
+        Properties:
+            Name:
+                Fn::Sub: "${EnvironmentName}3beepCoreApi"
+            AuthenticationType: API_KEY
+            LogConfig:
+                ExcludeVerboseContent: False
+                FieldLogLevel:
+                    Fn::If: [IsProductionEnvironment, ERROR, ALL]
+            XrayEnabled: False
+    GraphQLSchema:
+        Type: AWS::AppSync::GraphQLSchema
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            DefinitionS3Location: "${S3Bucket}/schema.graphql"
+    CreateChatRoomMessageRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: CreateChatRoomMessageFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoomMessage"
+    CreateChatRoomMessageDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}CreateChatRoomMessage"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoomMessage"
+            ServiceRoleArn:
+                Fn::GetAtt: CreateChatRoomMessageRole.Arn
+    CreateChatRoomMessageResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: createChatRoomMessage
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: CreateChatRoomMessageDataSource.Name
+    CreateChatRoomRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: CreateChatRoomFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoom"
+    CreateChatRoomDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}CreateChatRoom"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoom"
+            ServiceRoleArn:
+                Fn::GetAtt: CreateChatRoomRole.Arn
+    CreateChatRoomResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: createChatRoom
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: CreateChatRoomDataSource.Name
+    AssignChatRoomOperatorRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: AssignChatRoomOperatorFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}AssignChatRoomOperator"
+    AssignChatRoomOperatorDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}AssignChatRoomOperator"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}AssignChatRoomOperator"
+            ServiceRoleArn:
+                Fn::GetAtt: AssignChatRoomOperatorRole.Arn
+    AssignChatRoomOperatorResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: assignChatRoomOperator
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: AssignChatRoomOperatorDataSource.Name
+    CloseChatRoomRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: CloseChatRoomFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CloseChatRoom"
+    CloseChatRoomDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}CloseChatRoom"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CloseChatRoom"
+            ServiceRoleArn:
+                Fn::GetAtt: CloseChatRoomRole.Arn
+    CloseChatRoomResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: closeChatRoom
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: CloseChatRoomDataSource.Name
+    ActivateClosedChatRoomRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: ActivateClosedChatRoomFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}ActivateClosedChatRoom"
+    ActivateClosedChatRoomDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}ActivateClosedChatRoom"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}ActivateClosedChatRoom"
+            ServiceRoleArn:
+                Fn::GetAtt: ActivateClosedChatRoomRole.Arn
+    ActivateClosedChatRoomResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: activateClosedChatRoom
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: ActivateClosedChatRoomDataSource.Name
+    UpdateMessageSendingStatusRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: UpdateMessageSendingStatusFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageSendingStatus"
+    UpdateMessageSendingStatusDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}UpdateMessageSendingStatus"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageSendingStatus"
+            ServiceRoleArn:
+                Fn::GetAtt: UpdateMessageSendingStatusRole.Arn
+    UpdateMessageSendingStatusResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: updateMessageSendingStatus
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: UpdateMessageSendingStatusDataSource.Name
+    CreateIdentifiedUserRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: CreateIdentifiedUserFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateIdentifiedUser"
+    CreateIdentifiedUserDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}CreateIdentifiedUser"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateIdentifiedUser"
+            ServiceRoleArn:
+                Fn::GetAtt: CreateIdentifiedUserRole.Arn
+    CreateIdentifiedUserResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: createIdentifiedUser
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: CreateIdentifiedUserDataSource.Name
+    CreateInternalUserRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: CreateInternalUserFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateInternalUser"
+    CreateInternalUserDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}CreateInternalUser"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateInternalUser"
+            ServiceRoleArn:
+                Fn::GetAtt: CreateInternalUserRole.Arn
+    CreateInternalUserResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: createInternalUser
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: CreateInternalUserDataSource.Name
+    CreateOrganizationRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: CreateOrganizationFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateOrganization"
+    CreateOrganizationDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}CreateOrganization"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateOrganization"
+            ServiceRoleArn:
+                Fn::GetAtt: CreateOrganizationRole.Arn
+    CreateOrganizationResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: createOrganization
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: CreateOrganizationDataSource.Name
+    CreateUnidentifiedUserRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: CreateUnidentifiedUserFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateUnidentifiedUser"
+    CreateUnidentifiedUserDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}CreateUnidentifiedUser"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateUnidentifiedUser"
+            ServiceRoleArn:
+                Fn::GetAtt: CreateUnidentifiedUserRole.Arn
+    CreateUnidentifiedUserResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: createUnidentifiedUser
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: CreateUnidentifiedUserDataSource.Name
+    UpdateIdentifiedUserRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: UpdateIdentifiedUserFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateIdentifiedUser"
+    UpdateIdentifiedUserDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}UpdateIdentifiedUser"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateIdentifiedUser"
+            ServiceRoleArn:
+                Fn::GetAtt: UpdateIdentifiedUserRole.Arn
+    UpdateIdentifiedUserResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: updateIdentifiedUser
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: UpdateIdentifiedUserDataSource.Name
+    UpdateInternalUserRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: UpdateInternalUserFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateInternalUser"
+    UpdateInternalUserDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}UpdateInternalUser"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateInternalUser"
+            ServiceRoleArn:
+                Fn::GetAtt: UpdateInternalUserRole.Arn
+    UpdateInternalUserResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: updateInternalUser
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: UpdateInternalUserDataSource.Name
+    UpdateOrganizationRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: UpdateOrganizationFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateOrganization"
+    UpdateOrganizationDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}UpdateOrganization"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateOrganization"
+            ServiceRoleArn:
+                Fn::GetAtt: UpdateOrganizationRole.Arn
+    UpdateOrganizationResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: updateOrganization
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: UpdateOrganizationDataSource.Name
+    UpdateUnidentifiedUserRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: UpdateUnidentifiedUserFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateUnidentifiedUser"
+    UpdateUnidentifiedUserDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}UpdateUnidentifiedUser"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateUnidentifiedUser"
+            ServiceRoleArn:
+                Fn::GetAtt: UpdateUnidentifiedUserRole.Arn
+    UpdateUnidentifiedUserResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: updateUnidentifiedUser
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: UpdateUnidentifiedUserDataSource.Name
+    UpdateMessageStatusRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: UpdateMessageStatusFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageStatus"
+    UpdateMessageStatusDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}UpdateMessageStatus"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageStatus"
+            ServiceRoleArn:
+                Fn::GetAtt: UpdateMessageStatusRole.Arn
+    UpdateMessageStatusResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: updateMessageStatus
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: UpdateMessageStatusDataSource.Name
+    GetChatRoomMessagesRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: GetChatRoomMessagesFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomMessages"
+    GetChatRoomMessagesDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}GetChatRoomMessages"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomMessages"
+            ServiceRoleArn:
+                Fn::GetAtt: GetChatRoomMessagesRole.Arn
+    GetChatRoomMessagesResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: getChatRoomMessages
+            TypeName: Query
+            DataSourceName:
+                Fn::GetAtt: GetChatRoomMessagesDataSource.Name
+    GetChannelsTypesAndChannelsRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: GetChannelsTypesAndChannelsFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelsTypesAndChannels"
+    GetChannelsTypesAndChannelsDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}GetChannelsTypesAndChannels"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelsTypesAndChannels"
+            ServiceRoleArn:
+                Fn::GetAtt: GetChannelsTypesAndChannelsRole.Arn
+    GetChannelsTypesAndChannelsResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: getChannelsTypesAndChannels
+            TypeName: Query
+            DataSourceName:
+                Fn::GetAtt: GetChannelsTypesAndChannelsDataSource.Name
+    GetChatRoomInformationRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: GetChatRoomInformationFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomInformation"
+    GetChatRoomInformationDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}GetChatRoomInformation"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomInformation"
+            ServiceRoleArn:
+                Fn::GetAtt: GetChatRoomInformationRole.Arn
+    GetChatRoomInformationResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: getChatRoomInformation
+            TypeName: Query
+            DataSourceName:
+                Fn::GetAtt: GetChatRoomInformationDataSource.Name
+    GetNonAcceptedChatRoomsRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: GetNonAcceptedChatRoomsFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetNonAcceptedChatRooms"
+    GetNonAcceptedChatRoomsDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}GetNonAcceptedChatRooms"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetNonAcceptedChatRooms"
+            ServiceRoleArn:
+                Fn::GetAtt: GetNonAcceptedChatRoomsRole.Arn
+    GetNonAcceptedChatRoomsResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: getNonAcceptedChatRooms
+            TypeName: Query
+            DataSourceName:
+                Fn::GetAtt: GetNonAcceptedChatRoomsDataSource.Name
+    GetAcceptedChatRoomsRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: GetAcceptedChatRoomsFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetAcceptedChatRooms"
+    GetAcceptedChatRoomsDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}GetAcceptedChatRooms"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetAcceptedChatRooms"
+            ServiceRoleArn:
+                Fn::GetAtt: GetAcceptedChatRoomsRole.Arn
+    GetAcceptedChatRoomsResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: getAcceptedChatRooms
+            TypeName: Query
+            DataSourceName:
+                Fn::GetAtt: GetAcceptedChatRoomsDataSource.Name
+    GetCompletedChatRoomsRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: GetCompletedChatRoomsFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetCompletedChatRooms"
+    GetCompletedChatRoomsDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}GetCompletedChatRooms"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetCompletedChatRooms"
+            ServiceRoleArn:
+                Fn::GetAtt: GetCompletedChatRoomsRole.Arn
+    GetCompletedChatRoomsResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: getCompletedChatRooms
+            TypeName: Query
+            DataSourceName:
+                Fn::GetAtt: GetCompletedChatRoomsDataSource.Name
+    GetCountriesRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: GetCountriesFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetCountries"
+    GetCountriesDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}GetCountries"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetCountries"
+            ServiceRoleArn:
+                Fn::GetAtt: GetCountriesRole.Arn
+    GetCountriesResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: getCountries
+            TypeName: Query
+            DataSourceName:
+                Fn::GetAtt: GetCountriesDataSource.Name
+    GetGendersRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: GetGendersFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetGenders"
+    GetGendersDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}GetGenders"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetGenders"
+            ServiceRoleArn:
+                Fn::GetAtt: GetGendersRole.Arn
+    GetGendersResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: getGenders
+            TypeName: Query
+            DataSourceName:
+                Fn::GetAtt: GetGendersDataSource.Name
+    GetInternalUserRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: GetInternalUserFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUser"
+    GetInternalUserDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}GetInternalUser"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUser"
+            ServiceRoleArn:
+                Fn::GetAtt: GetInternalUserRole.Arn
+    GetInternalUserResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: getInternalUser
+            TypeName: Query
+            DataSourceName:
+                Fn::GetAtt: GetInternalUserDataSource.Name
+    GetInternalUsersRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: GetInternalUsersFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUsers"
+    GetInternalUsersDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}GetInternalUsers"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUsers"
+            ServiceRoleArn:
+                Fn::GetAtt: GetInternalUsersRole.Arn
+    GetInternalUsersResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: getInternalUsers
+            TypeName: Query
+            DataSourceName:
+                Fn::GetAtt: GetInternalUsersDataSource.Name
+    GetRolesRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: GetRolesFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetRoles"
+    GetRolesDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}GetRoles"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetRoles"
+            ServiceRoleArn:
+                Fn::GetAtt: GetRolesRole.Arn
+    GetRolesResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: getRoles
+            TypeName: Query
+            DataSourceName:
+                Fn::GetAtt: GetRolesDataSource.Name
+    GetClientRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: GetClientFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetClient"
+    GetClientDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}GetClient"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetClient"
+            ServiceRoleArn:
+                Fn::GetAtt: GetClientRole.Arn
+    GetClientResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: getClient
+            TypeName: Query
+            DataSourceName:
+                Fn::GetAtt: GetClientDataSource.Name
+    GetChannelOnlineOperatorsRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: GetChannelOnlineOperatorsFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelOnlineOperators"
+    GetChannelOnlineOperatorsDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}GetChannelOnlineOperators"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelOnlineOperators"
+            ServiceRoleArn:
+                Fn::GetAtt: GetChannelOnlineOperatorsRole.Arn
+    GetChannelOnlineOperatorsResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: getChannelOnlineOperators
+            TypeName: Query
+            DataSourceName:
+                Fn::GetAtt: GetChannelOnlineOperatorsDataSource.Name
+    GetClientChatRoomsRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: GetClientChatRoomsFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetClientChatRooms"
+    GetClientChatRoomsDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name: "${EnvironmentName}GetClientChatRooms"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetClientChatRooms"
+            ServiceRoleArn:
+                Fn::GetAtt: GetClientChatRoomsRole.Arn
+    GetClientChatRoomsResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: getClientChatRooms
+            TypeName: Query
+            DataSourceName:
+                Fn::GetAtt: GetClientChatRoomsDataSource.Name
