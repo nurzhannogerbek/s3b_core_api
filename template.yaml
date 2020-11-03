@@ -32,7 +32,8 @@ Resources:
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            DefinitionS3Location: "${S3Bucket}/schema.graphql"
+            DefinitionS3Location:
+                Fn::Sub: "${S3Bucket}/schema.graphql"
     CreateChatRoomMessageRole:
         Type: AWS::IAM::Role
         Properties:
