@@ -106,7 +106,7 @@ deploy: &deploy
             export STACK_NAME='Dev3beepCoreApi'
             export ENVIRONMENT_NAME='Dev'
           fi
-          - >
+        - >
           if [ $BITBUCKET_BRANCH == 'master' ];
           then
             export S3_BUCKET='prod-3beep-core-api'
