@@ -3,7 +3,7 @@ input ActivateClosedChatRoomInput {
 	clientId: String!
 }
 
-type ActivateClosedChatRoomOutput {
+type ActivateClosedChatRoomOutput @aws_api_key {
 	chatRoomId: String
 	chatRoomStatus: String
 	channelId: String
@@ -18,7 +18,7 @@ input AssignChatRoomOperatorInput {
 	clientId: String!
 }
 
-type AssignChatRoomOperatorOutput {
+type AssignChatRoomOperatorOutput @aws_api_key {
 	chatRoomId: String
 	channelId: String
 	chatRoomStatus: String
@@ -29,7 +29,7 @@ input ChannelInput {
 	channelId: String
 }
 
-type ChannelOutput {
+type ChannelOutput @aws_api_key {
 	channelId: String
 	channelName: String
 	channelDescription: String
@@ -37,13 +37,13 @@ type ChannelOutput {
 	channelType: ChannelTypeOutput
 }
 
-type ChannelTypeOutput {
+type ChannelTypeOutput @aws_api_key {
 	channelTypeId: String
 	channelTypeName: String
 	channelTypeDescription: String
 }
 
-type ChatRoomClientOutput {
+type ChatRoomClientOutput @aws_api_key {
 	chatRoomMemberSinceDateTime: String
 	userId: String
 	userFirstName: String
@@ -60,7 +60,7 @@ type ChatRoomClientOutput {
 	country: CountryOutput
 }
 
-type ChatRoomMessage {
+type ChatRoomMessage @aws_api_key {
 	messageCreatedDateTime: String!
 	messageUpdatedDateTime: String!
 	messageDeletedDateTime: String
@@ -76,7 +76,7 @@ type ChatRoomMessage {
 	quotedMessage: QuotedMessageOutput
 }
 
-type ChatRoomOperatorsOutput {
+type ChatRoomOperatorsOutput @aws_api_key {
 	chatRoomMemberSinceDateTime: String
 	auth0UserId: String
 	auth0Metadata: String
@@ -96,7 +96,7 @@ type ChatRoomOperatorsOutput {
 	organization: OrganizationOutput
 }
 
-type ClientOutput {
+type ClientOutput @aws_api_key {
 	userId: String
 	userFirstName: String
 	userLastName: String
@@ -117,13 +117,13 @@ input CloseChatRoomInput {
 	operatorId: String!
 }
 
-type CloseChatRoomOutput {
+type CloseChatRoomOutput @aws_api_key {
 	chatRoomId: String
 	chatRoomStatus: String
 	operator: OperatorOutput
 }
 
-type CountryOutput {
+type CountryOutput @aws_api_key {
 	countryId: String
 	countryShortName: String
 	countryOfficialName: String
@@ -133,7 +133,7 @@ type CountryOutput {
 	countryCodeTopLevelDomain: String
 }
 
-input CreateChatRoomInput {
+input CreateChatRoomInput @aws_api_key {
 	# Технический идентификатор канала.
 	channelTechnicalId: String!
 	# Название типа канала. Например: widget, telegram.
@@ -151,7 +151,7 @@ input CreateChatRoomMessageInput {
 	quotedMessage: QuotedMessageInput
 }
 
-type CreateChatRoomMessageOutput {
+type CreateChatRoomMessageOutput @aws_api_key {
 	channelId: String
 	chatRoomId: String
 	messageCreatedDateTime: String
@@ -169,7 +169,7 @@ type CreateChatRoomMessageOutput {
 	quotedMessage: QuotedMessageOutput
 }
 
-type CreateChatRoomOutput {
+type CreateChatRoomOutput @aws_api_key {
 	chatRoomId: String
 	chatRoomStatus: String
 	channel: ChannelOutput
@@ -192,7 +192,7 @@ input CreateIdentifiedUserInput {
 	metadata: String!
 }
 
-type CreateIdentifiedUserOutput {
+type CreateIdentifiedUserOutput @aws_api_key {
 	userId: String
 	userFirstName: String
 	userLastName: String
@@ -207,7 +207,7 @@ type CreateIdentifiedUserOutput {
 	metadata: String
 }
 
-input CreateInternalUserInput {
+input CreateInternalUserInput @aws_api_key {
 	auth0UserId: String!
 	auth0Metadata: String
 	userFirstName: String
@@ -225,7 +225,7 @@ input CreateInternalUserInput {
 	organizationId: String
 }
 
-type CreateInternalUserOutput {
+type CreateInternalUserOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
@@ -255,7 +255,7 @@ input CreateOrganizationInput {
 	rootOrganizationDescription: String
 }
 
-type CreateOrganizationOutput {
+type CreateOrganizationOutput @aws_api_key {
 	organizationId: String
 	organizationName: String
 	organizationDescription: String
@@ -271,18 +271,18 @@ input CreateUnidentifiedUserInput {
 	metadata: String!
 }
 
-type CreateUnidentifiedUserOutput {
+type CreateUnidentifiedUserOutput @aws_api_key {
 	userId: String
 	metadata: String
 }
 
-type GenderOutput {
+type GenderOutput @aws_api_key {
 	genderId: String
 	genderTechnicalName: String
 	genderPublicName: String
 }
 
-type GetAcceptedChatRoomsOutput {
+type GetAcceptedChatRoomsOutput @aws_api_key {
 	chatRoomId: String
 	lastMessageContent: String
 	lastMessageDateTime: String
@@ -291,7 +291,7 @@ type GetAcceptedChatRoomsOutput {
 	client: ClientOutput
 }
 
-type GetChannelOnlineOperatorsOutput {
+type GetChannelOnlineOperatorsOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
@@ -310,14 +310,14 @@ type GetChannelOnlineOperatorsOutput {
 	organization: OrganizationOutput
 }
 
-type GetChannelsTypesAndChannelsOutput {
+type GetChannelsTypesAndChannelsOutput @aws_api_key {
 	channelTypeId: String
 	channelTypeName: String
 	channelTypeDescription: String
 	channels: [NonNestedChannelOutput]
 }
 
-type GetChatRoomInformationOutput {
+type GetChatRoomInformationOutput @aws_api_key {
 	chatRoomId: String
 	chatRoomStatus: String
 	channel: ChannelOutput
@@ -325,12 +325,12 @@ type GetChatRoomInformationOutput {
 	chatRoomOperators: [ChatRoomOperatorsOutput]
 }
 
-type GetChatRoomMessagesOutput {
+type GetChatRoomMessagesOutput @aws_api_key {
 	pagingState: String
 	chatRoomMessages: [ChatRoomMessage]
 }
 
-type GetClientChatRoomsOutput {
+type GetClientChatRoomsOutput @aws_api_key {
 	chatRoomMemberSinceDateTime: String
 	chatRoomId: String
 	chatRoomStatus: String
@@ -339,7 +339,7 @@ type GetClientChatRoomsOutput {
 	lastMessageDateTime: String
 }
 
-type GetClientOutput {
+type GetClientOutput @aws_api_key {
 	userId: String
 	userFirstName: String
 	userLastName: String
@@ -355,7 +355,7 @@ type GetClientOutput {
 	country: CountryOutput
 }
 
-type GetCompletedChatRoomsOutput {
+type GetCompletedChatRoomsOutput @aws_api_key {
 	chatRoomId: String
 	lastMessageContent: String
 	lastMessageDateTime: String
@@ -364,7 +364,7 @@ type GetCompletedChatRoomsOutput {
 	client: ClientOutput
 }
 
-type GetCountriesOutput {
+type GetCountriesOutput @aws_api_key {
 	countryId: String
 	countryShortName: String
 	countryOfficialName: String
@@ -374,13 +374,13 @@ type GetCountriesOutput {
 	countryCodeTopLevelDomain: String
 }
 
-type GetGendersOutput {
+type GetGendersOutput @aws_api_key {
 	genderId: String
 	genderTechnicalName: String
 	genderPublicName: String
 }
 
-type GetInternalUserOutput {
+type GetInternalUserOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
@@ -399,7 +399,7 @@ type GetInternalUserOutput {
 	organization: OrganizationOutput
 }
 
-type GetInternalUsersOutput {
+type GetInternalUsersOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
@@ -418,13 +418,13 @@ type GetInternalUsersOutput {
 	organization: OrganizationOutput
 }
 
-type GetNonAcceptedChatRoomsOutput {
+type GetNonAcceptedChatRoomsOutput @aws_api_key {
 	chatRoomId: String
 	channel: ChannelOutput
 	client: ClientOutput
 }
 
-type GetRolesOutput {
+type GetRolesOutput @aws_api_key {
 	roleId: String
 	roleTechnicalName: String
 	rolePublicName: String
@@ -440,44 +440,59 @@ enum MessageStatusOutput {
 type Mutation {
 	# Данный запрос позволяет создать сообщение в определенной чат комнате.
 	createChatRoomMessage(input: CreateChatRoomMessageInput): CreateChatRoomMessageOutput
+		@aws_api_key
 	# Данный запрос позволяет создать чат комнату.
 	createChatRoom(input: CreateChatRoomInput): CreateChatRoomOutput
+		@aws_api_key
 	# Данный запрос позволяет назначить оператора ответственным за определенную чат комнату.
 	assignChatRoomOperator(input: AssignChatRoomOperatorInput): AssignChatRoomOperatorOutput
+		@aws_api_key
 	# Данный запрос позволяет закрыть чат комнату после завершения диалога между оператором и клиентам.
 	closeChatRoom(input: CloseChatRoomInput): CloseChatRoomOutput
+		@aws_api_key
 	# Данный запрос позволяет активировать закрытую чат комнату, когда в нее пишет клиент.
 	activateClosedChatRoom(input: ActivateClosedChatRoomInput): ActivateClosedChatRoomOutput
+		@aws_api_key
 	# Данный запрос позволяет обновлять статус отправки сообщения в чат комнате.
 	updateMessageSendingStatus(input: UpdateMessageSendingStatusInput): UpdateMessageSendingStatusOutput
+		@aws_api_key
 	# Данный запрос позволяет создать нового идентифицированного пользователя в системе.
 	createIdentifiedUser(input: CreateIdentifiedUserInput): CreateIdentifiedUserOutput
+		@aws_api_key
 	# Данный запрос позволяет создать нового внутреннего пользователя в системе.
 	createInternalUser(input: CreateInternalUserInput): CreateInternalUserOutput
+		@aws_api_key
 	# Данный запрос позволяет создать организацию.
 	createOrganization(input: CreateOrganizationInput): CreateOrganizationOutput
+		@aws_api_key
 	# Данный запрос позволяет создать неидентифицированного пользователя.
 	createUnidentifiedUser(input: CreateUnidentifiedUserInput): CreateUnidentifiedUserOutput
+		@aws_api_key
 	# Данный запрос позволяет обновить информацию определенного идентифицированного пользователя системы.
 	updateIdentifiedUser(input: UpdateIdentifiedUserInput): UpdateIdentifiedUserOutput
+		@aws_api_key
 	# Данный запрос позволяет обновить информацию определенного внутреннего пользователя системы.
 	updateInternalUser(input: UpdateInternalUserInput): UpdateInternalUserOutput
+		@aws_api_key
 	# Данный запрос позволяет обновить информацию определенной организации.
 	updateOrganization(input: UpdateOrganizationInput): UpdateOrganizationOutput
+		@aws_api_key
 	# Данный запрос позволяет обновить информацию определенного неидентифицированного пользователя.
 	updateUnidentifiedUser(input: UpdateUnidentifiedUserInput): UpdateUnidentifiedUserOutput
+		@aws_api_key
 	# Данный запрос позволяет обновлять статус определенного сообщения в определенной чат комнате.
 	updateMessageStatus(input: UpdateMessageStatusInput): UpdateMessageStatusOutput
+		@aws_api_key
 }
 
-type NonNestedChannelOutput {
+type NonNestedChannelOutput @aws_api_key {
 	channelId: String
 	channelName: String
 	channelDescription: String
 	channelTechnicalId: String
 }
 
-type OperatorOutput {
+type OperatorOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
@@ -496,7 +511,7 @@ type OperatorOutput {
 	organization: OrganizationOutput
 }
 
-type OrganizationOutput {
+type OrganizationOutput @aws_api_key {
 	organizationId: String
 	organizationName: String
 	organizationDescription: String
@@ -511,10 +526,13 @@ type OrganizationOutput {
 type Query {
 	# Данный запрос позволяет получить список сообщений определенной чат комнаты.
 	getChatRoomMessages(chatRoomId: String!, fetchSize: Int!, pagingState: String): GetChatRoomMessagesOutput
+		@aws_api_key
 	# Данный запрос позволяет получить список типов каналов и каналов, которые может обслужить определенный внутренний пользователь.
 	getChannelsTypesAndChannels(userId: String!): [GetChannelsTypesAndChannelsOutput]
+		@aws_api_key
 	# Данный запрос позволяет получить полную информацию определенной чат комнаты.
 	getChatRoomInformation(chatRoomId: String!): GetChatRoomInformationOutput
+		@aws_api_key
 	# Данный запрос позволяет получить список непринятых в работу чат комнат.
 	getNonAcceptedChatRooms(
 		organizationId: String!,
@@ -522,6 +540,7 @@ type Query {
 		startDateTime: String,
 		endDateTime: String
 	): [GetNonAcceptedChatRoomsOutput]
+		@aws_api_key
 	# Данный запрос позволяет получить список принятых в работу чат комнат.
 	getAcceptedChatRooms(
 		operatorId: String!,
@@ -529,6 +548,7 @@ type Query {
 		startDateTime: String,
 		endDateTime: String
 	): [GetAcceptedChatRoomsOutput]
+		@aws_api_key
 	# Данный запрос позволяет получить список завершенных диалогов (закрытых чат комнат).
 	getCompletedChatRooms(
 		operatorId: String!,
@@ -538,18 +558,25 @@ type Query {
 		startDateTime: String,
 		endDateTime: String
 	): [GetCompletedChatRoomsOutput]
+		@aws_api_key
 	# Данный запрос позволяет получить список стран из справочника.
 	getCountries: [GetCountriesOutput]
+		@aws_api_key
 	# Данный запрос позволяет получить список полов из справочника.
 	getGenders: [GetGendersOutput]
+		@aws_api_key
 	# Данный запрос позволяет получить информацию определенного внутреннего пользователя системы.
 	getInternalUser(auth0UserId: String!): GetInternalUserOutput
+		@aws_api_key
 	# Данный запрос позволяет получить список внутренних пользователей определенной организации.
 	getInternalUsers(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): [GetInternalUsersOutput]
+		@aws_api_key
 	# Данный запрос позволяет получить список доступных ролей в системе.
 	getRoles: [GetRolesOutput]
+		@aws_api_key
 	# Данный запрос позволяет получить информацию по определенному клиенту.
 	getClient(userId: String!): GetClientOutput
+		@aws_api_key
 	# Данный запрос позволяет получить список онлайн операторов, которые могут обслужить определенный канал.
 	getChannelOnlineOperators(
 		channelTechnicalId: String!,
@@ -557,6 +584,7 @@ type Query {
 		currentPageNumber: Int!,
 		recordsNumber: Int!
 	): [GetChannelOnlineOperatorsOutput]
+		@aws_api_key
 	# Данный запрос позволяет получить список чат комнат в рамках канала определенного клиента.
 	getClientChatRooms(
 		channelTechnicalId: String!,
@@ -565,6 +593,7 @@ type Query {
 		currentPageNumber: Int!,
 		recordsNumber: Int!
 	): [GetClientChatRoomsOutput]
+		@aws_api_key
 }
 
 input QuotedMessageInput {
@@ -576,7 +605,7 @@ input QuotedMessageInput {
 	messageContentUrl: String
 }
 
-type QuotedMessageOutput {
+type QuotedMessageOutput @aws_api_key {
 	messageId: String
 	messageAuthorId: String
 	messageChannelId: String
@@ -585,7 +614,7 @@ type QuotedMessageOutput {
 	messageContentUrl: String
 }
 
-type RoleOutput {
+type RoleOutput @aws_api_key {
 	roleId: String
 	roleTechnicalName: String
 	rolePublicName: String
@@ -595,39 +624,40 @@ type RoleOutput {
 type Subscription {
 	# Данная подписка позволяет следить за новым созданным сообщением.
 	watchCreateChatRoomMessage(chatRoomId: String, channelId: String): CreateChatRoomMessageOutput
-		@aws_subscribe(mutations: ["createChatRoomMessage"])
+		@aws_api_key @aws_subscribe(mutations: ["createChatRoomMessage"])
 	# Данная подписка позволяет следить за новым созданным сообщением по id чат комнаты.
 	watchCreateChatRoomMessageByChatRoomId(chatRoomId: String!): CreateChatRoomMessageOutput
-		@aws_subscribe(mutations: ["createChatRoomMessage"])
+		@aws_api_key @aws_subscribe(mutations: ["createChatRoomMessage"])
 	# Данная подписка позволяет следить за новым созданным сообщением по id канала.
 	watchCreateChatRoomMessageByChannelId(channelId: String!): CreateChatRoomMessageOutput
-		@aws_subscribe(mutations: ["createChatRoomMessage"])
+		@aws_api_key @aws_subscribe(mutations: ["createChatRoomMessage"])
 	# Данная подписка позволяет следить за обновлениями статуса отправки сообщение в чат комнатах.
 	watchUpdateMessageSendingStatus(chatRoomId: String, channelId: String): UpdateMessageSendingStatusOutput
-		@aws_subscribe(mutations: ["updateMessageSendingStatus"])
+		@aws_api_key @aws_subscribe(mutations: ["updateMessageSendingStatus"])
 	# Данная подписка позволяет следить за обновлениями статуса отправки сообщение в чат комнатах по id чат комнаты.
 	watchUpdateMessageSendingStatusByChatRoomId(chatRoomId: String!): UpdateMessageSendingStatusOutput
-		@aws_subscribe(mutations: ["updateMessageSendingStatus"])
+		@aws_api_key @aws_subscribe(mutations: ["updateMessageSendingStatus"])
 	# Данная подписка позволяет следить за обновлениями статуса отправки сообщение в чат комнатах по id канала.
 	watchUpdateMessageSendingStatusByChannelId(channelId: String!): UpdateMessageSendingStatusOutput
-		@aws_subscribe(mutations: ["updateMessageSendingStatus"])
+		@aws_api_key @aws_subscribe(mutations: ["updateMessageSendingStatus"])
 	# Данная подписка позволяет следить за созданными и не принятыми в работу чат комнатами.
 	watchCreateChatRoom(channelId: String!): CreateChatRoomOutput
-		@aws_subscribe(mutations: ["createChatRoom"])
+		@aws_api_key @aws_subscribe(mutations: ["createChatRoom"])
 	# Данная подписка позволяет следить за назначением оператора в определенную чат комнатами по id чат комнаты.
 	watchAssignChatRoomOperatorByChatRoomId(chatRoomId: String!): AssignChatRoomOperatorOutput
+	    @aws_api_key
 	# Данная подписка позволяет следить за назначением оператора в определенную чат комнатами по id канала.
 	watchAssignChatRoomOperatorByChannelId(channelId: String!): AssignChatRoomOperatorOutput
-		@aws_subscribe(mutations: ["assignChatRoomOperator"])
+		@aws_api_key @aws_subscribe(mutations: ["assignChatRoomOperator"])
 	# Данная подписка позволяет следить за закрытием чат комнаты после завершения диалога.
 	watchCloseChatRoom(chatRoomId: String!): CloseChatRoomOutput
-		@aws_subscribe(mutations: ["closeChatRoom"])
+		@aws_api_key @aws_subscribe(mutations: ["closeChatRoom"])
 	# Данная подписка позволяет получить информацию о чат комнате, которую активизировали.
 	watchActivateClosedChatRoom(channelId: String!): ActivateClosedChatRoomOutput
-		@aws_subscribe(mutations: ["activateClosedChatRoom"])
+		@aws_api_key @aws_subscribe(mutations: ["activateClosedChatRoom"])
 	# Данная подписка позволяет получить информацию об обновленном статусе сообщений из определенной чат комнаты.
 	watchUpdateMessageStatus(chatRoomId: String!): UpdateMessageStatusOutput
-		@aws_subscribe(mutations: ["updateMessageStatus"])
+		@aws_api_key @aws_subscribe(mutations: ["updateMessageStatus"])
 }
 
 input UpdateIdentifiedUserInput {
@@ -645,7 +675,7 @@ input UpdateIdentifiedUserInput {
 	metadata: String!
 }
 
-type UpdateIdentifiedUserOutput {
+type UpdateIdentifiedUserOutput @aws_api_key {
 	userId: String
 	userFirstName: String
 	userLastName: String
@@ -678,7 +708,7 @@ input UpdateInternalUserInput {
 	organizationId: String
 }
 
-type UpdateInternalUserOutput {
+type UpdateInternalUserOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
@@ -705,7 +735,7 @@ input UpdateMessageSendingStatusInput {
 	messageText: String
 }
 
-type UpdateMessageSendingStatusOutput {
+type UpdateMessageSendingStatusOutput @aws_api_key {
 	chatRoomId: String
 	channelId: String
 	userId: String
@@ -719,7 +749,7 @@ input UpdateMessageStatusInput {
 	messageStatus: MessageStatusOutput!
 }
 
-type UpdateMessageStatusOutput {
+type UpdateMessageStatusOutput @aws_api_key {
 	channelId: String
 	chatRoomId: String
 	messageCreatedDateTime: String
@@ -749,7 +779,7 @@ input UpdateOrganizationInput {
 	rootOrganizationDescription: String
 }
 
-type UpdateOrganizationOutput {
+type UpdateOrganizationOutput @aws_api_key {
 	organizationId: String
 	organizationName: String
 	organizationDescription: String
@@ -766,7 +796,7 @@ input UpdateUnidentifiedUserInput {
 	metadata: String!
 }
 
-type UpdateUnidentifiedUserOutput {
+type UpdateUnidentifiedUserOutput @aws_api_key {
 	userId: String
 	metadata: String!
 }
