@@ -16,6 +16,26 @@ Conditions:
     IsProductionEnvironment:
         Fn::Equals: [Ref: EnvironmentName, "Prod"]
 Resources:
+    CloudWatchLogsRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: CloudWatchLogsAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action:
+                                - logs:CreateLogStream
+                                - logs:PutLogEvents
+                            Resource: "*"
     GraphQLApi:
         Type: AWS::AppSync::GraphQLApi
         Properties:
@@ -23,6 +43,8 @@ Resources:
                 Fn::Sub: "${EnvironmentName}3beepCoreApi"
             AuthenticationType: API_KEY
             LogConfig:
+                CloudWatchLogsRoleArn:
+                    Fn::GetAtt: CloudWatchLogsRole.Arn
                 ExcludeVerboseContent: False
                 FieldLogLevel:
                     Fn::If: [IsProductionEnvironment, ERROR, ALL]
@@ -33,7 +55,12 @@ Resources:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
             DefinitionS3Location:
-                Fn::Sub: "${S3Bucket}/schema.graphql"
+                Fn::Sub: "s3://${S3Bucket}/schema.graphql"
+    ApiKey:
+        Type: AWS::AppSync::ApiKey
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
     CreateChatRoomMessageRole:
         Type: AWS::IAM::Role
         Properties:
@@ -53,18 +80,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoomMessage"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoomMessageARN"
     CreateChatRoomMessageDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}CreateChatRoomMessage"
+            Name:
+                Fn::Sub: "${EnvironmentName}CreateChatRoomMessage"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoomMessage"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoomMessageARN"
             ServiceRoleArn:
                 Fn::GetAtt: CreateChatRoomMessageRole.Arn
     CreateChatRoomMessageResolver:
@@ -95,18 +123,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoom"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoomARN"
     CreateChatRoomDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}CreateChatRoom"
+            Name:
+                 Fn::Sub: "${EnvironmentName}CreateChatRoom"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoom"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoomARN"
             ServiceRoleArn:
                 Fn::GetAtt: CreateChatRoomRole.Arn
     CreateChatRoomResolver:
@@ -137,18 +166,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}AssignChatRoomOperator"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}AssignChatRoomOperatorARN"
     AssignChatRoomOperatorDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}AssignChatRoomOperator"
+            Name:
+                 Fn::Sub: "${EnvironmentName}AssignChatRoomOperator"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}AssignChatRoomOperator"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}AssignChatRoomOperatorARN"
             ServiceRoleArn:
                 Fn::GetAtt: AssignChatRoomOperatorRole.Arn
     AssignChatRoomOperatorResolver:
@@ -179,18 +209,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CloseChatRoom"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CloseChatRoomARN"
     CloseChatRoomDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}CloseChatRoom"
+            Name:
+                 Fn::Sub: "${EnvironmentName}CloseChatRoom"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CloseChatRoom"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CloseChatRoomARN"
             ServiceRoleArn:
                 Fn::GetAtt: CloseChatRoomRole.Arn
     CloseChatRoomResolver:
@@ -221,18 +252,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}ActivateClosedChatRoom"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}ActivateClosedChatRoomARN"
     ActivateClosedChatRoomDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}ActivateClosedChatRoom"
+            Name:
+                 Fn::Sub: "${EnvironmentName}ActivateClosedChatRoom"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}ActivateClosedChatRoom"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}ActivateClosedChatRoomARN"
             ServiceRoleArn:
                 Fn::GetAtt: ActivateClosedChatRoomRole.Arn
     ActivateClosedChatRoomResolver:
@@ -263,18 +295,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageSendingStatus"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageSendingStatusARN"
     UpdateMessageSendingStatusDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}UpdateMessageSendingStatus"
+            Name:
+                 Fn::Sub: "${EnvironmentName}UpdateMessageSendingStatus"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageSendingStatus"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageSendingStatusARN"
             ServiceRoleArn:
                 Fn::GetAtt: UpdateMessageSendingStatusRole.Arn
     UpdateMessageSendingStatusResolver:
@@ -305,18 +338,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateIdentifiedUser"
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateIdentifiedUserARN"
     CreateIdentifiedUserDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}CreateIdentifiedUser"
+            Name:
+                 Fn::Sub: "${EnvironmentName}CreateIdentifiedUser"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateIdentifiedUser"
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateIdentifiedUserARN"
             ServiceRoleArn:
                 Fn::GetAtt: CreateIdentifiedUserRole.Arn
     CreateIdentifiedUserResolver:
@@ -347,18 +381,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateInternalUser"
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateInternalUserARN"
     CreateInternalUserDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}CreateInternalUser"
+            Name:
+                 Fn::Sub: "${EnvironmentName}CreateInternalUser"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateInternalUser"
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateInternalUserARN"
             ServiceRoleArn:
                 Fn::GetAtt: CreateInternalUserRole.Arn
     CreateInternalUserResolver:
@@ -389,18 +424,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateOrganization"
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateOrganizationARN"
     CreateOrganizationDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}CreateOrganization"
+            Name:
+                 Fn::Sub: "${EnvironmentName}CreateOrganization"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateOrganization"
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateOrganizationARN"
             ServiceRoleArn:
                 Fn::GetAtt: CreateOrganizationRole.Arn
     CreateOrganizationResolver:
@@ -431,18 +467,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateUnidentifiedUser"
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateUnidentifiedUserARN"
     CreateUnidentifiedUserDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}CreateUnidentifiedUser"
+            Name:
+                 Fn::Sub: "${EnvironmentName}CreateUnidentifiedUser"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateUnidentifiedUser"
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateUnidentifiedUserARN"
             ServiceRoleArn:
                 Fn::GetAtt: CreateUnidentifiedUserRole.Arn
     CreateUnidentifiedUserResolver:
@@ -473,18 +510,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateIdentifiedUser"
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateIdentifiedUserARN"
     UpdateIdentifiedUserDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}UpdateIdentifiedUser"
+            Name:
+                 Fn::Sub: "${EnvironmentName}UpdateIdentifiedUser"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateIdentifiedUser"
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateIdentifiedUserARN"
             ServiceRoleArn:
                 Fn::GetAtt: UpdateIdentifiedUserRole.Arn
     UpdateIdentifiedUserResolver:
@@ -515,18 +553,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateInternalUser"
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateInternalUserARN"
     UpdateInternalUserDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}UpdateInternalUser"
+            Name:
+                 Fn::Sub: "${EnvironmentName}UpdateInternalUser"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateInternalUser"
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateInternalUserARN"
             ServiceRoleArn:
                 Fn::GetAtt: UpdateInternalUserRole.Arn
     UpdateInternalUserResolver:
@@ -557,18 +596,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateOrganization"
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateOrganizationARN"
     UpdateOrganizationDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}UpdateOrganization"
+            Name:
+                 Fn::Sub: "${EnvironmentName}UpdateOrganization"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateOrganization"
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateOrganizationARN"
             ServiceRoleArn:
                 Fn::GetAtt: UpdateOrganizationRole.Arn
     UpdateOrganizationResolver:
@@ -599,18 +639,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateUnidentifiedUser"
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateUnidentifiedUserARN"
     UpdateUnidentifiedUserDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}UpdateUnidentifiedUser"
+            Name:
+                 Fn::Sub: "${EnvironmentName}UpdateUnidentifiedUser"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateUnidentifiedUser"
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateUnidentifiedUserARN"
             ServiceRoleArn:
                 Fn::GetAtt: UpdateUnidentifiedUserRole.Arn
     UpdateUnidentifiedUserResolver:
@@ -641,18 +682,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageStatus"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageStatusARN"
     UpdateMessageStatusDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}UpdateMessageStatus"
+            Name:
+                 Fn::Sub: "${EnvironmentName}UpdateMessageStatus"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageStatus"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageStatusARN"
             ServiceRoleArn:
                 Fn::GetAtt: UpdateMessageStatusRole.Arn
     UpdateMessageStatusResolver:
@@ -683,18 +725,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomMessages"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomMessagesARN"
     GetChatRoomMessagesDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}GetChatRoomMessages"
+            Name:
+                 Fn::Sub: "${EnvironmentName}GetChatRoomMessages"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomMessages"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomMessagesARN"
             ServiceRoleArn:
                 Fn::GetAtt: GetChatRoomMessagesRole.Arn
     GetChatRoomMessagesResolver:
@@ -725,18 +768,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelsTypesAndChannels"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelsTypesAndChannelsARN"
     GetChannelsTypesAndChannelsDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}GetChannelsTypesAndChannels"
+            Name:
+                 Fn::Sub: "${EnvironmentName}GetChannelsTypesAndChannels"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelsTypesAndChannels"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelsTypesAndChannelsARN"
             ServiceRoleArn:
                 Fn::GetAtt: GetChannelsTypesAndChannelsRole.Arn
     GetChannelsTypesAndChannelsResolver:
@@ -767,18 +811,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomInformation"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomInformationARN"
     GetChatRoomInformationDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}GetChatRoomInformation"
+            Name:
+                 Fn::Sub: "${EnvironmentName}GetChatRoomInformation"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomInformation"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomInformationARN"
             ServiceRoleArn:
                 Fn::GetAtt: GetChatRoomInformationRole.Arn
     GetChatRoomInformationResolver:
@@ -809,18 +854,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetNonAcceptedChatRooms"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetNonAcceptedChatRoomsARN"
     GetNonAcceptedChatRoomsDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}GetNonAcceptedChatRooms"
+            Name:
+                 Fn::Sub: "${EnvironmentName}GetNonAcceptedChatRooms"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetNonAcceptedChatRooms"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetNonAcceptedChatRoomsARN"
             ServiceRoleArn:
                 Fn::GetAtt: GetNonAcceptedChatRoomsRole.Arn
     GetNonAcceptedChatRoomsResolver:
@@ -851,18 +897,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetAcceptedChatRooms"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetAcceptedChatRoomsARN"
     GetAcceptedChatRoomsDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}GetAcceptedChatRooms"
+            Name:
+                 Fn::Sub: "${EnvironmentName}GetAcceptedChatRooms"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetAcceptedChatRooms"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetAcceptedChatRoomsARN"
             ServiceRoleArn:
                 Fn::GetAtt: GetAcceptedChatRoomsRole.Arn
     GetAcceptedChatRoomsResolver:
@@ -893,18 +940,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetCompletedChatRooms"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetCompletedChatRoomsARN"
     GetCompletedChatRoomsDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}GetCompletedChatRooms"
+            Name:
+                 Fn::Sub: "${EnvironmentName}GetCompletedChatRooms"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetCompletedChatRooms"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetCompletedChatRoomsARN"
             ServiceRoleArn:
                 Fn::GetAtt: GetCompletedChatRoomsRole.Arn
     GetCompletedChatRoomsResolver:
@@ -935,18 +983,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetCountries"
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetCountriesARN"
     GetCountriesDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}GetCountries"
+            Name:
+                 Fn::Sub: "${EnvironmentName}GetCountries"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetCountries"
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetCountriesARN"
             ServiceRoleArn:
                 Fn::GetAtt: GetCountriesRole.Arn
     GetCountriesResolver:
@@ -977,18 +1026,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetGenders"
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetGendersARN"
     GetGendersDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}GetGenders"
+            Name:
+                 Fn::Sub: "${EnvironmentName}GetGenders"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetGenders"
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetGendersARN"
             ServiceRoleArn:
                 Fn::GetAtt: GetGendersRole.Arn
     GetGendersResolver:
@@ -1019,18 +1069,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUser"
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUserARN"
     GetInternalUserDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}GetInternalUser"
+            Name:
+                 Fn::Sub: "${EnvironmentName}GetInternalUser"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUser"
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUserARN"
             ServiceRoleArn:
                 Fn::GetAtt: GetInternalUserRole.Arn
     GetInternalUserResolver:
@@ -1061,18 +1112,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUsers"
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUsersARN"
     GetInternalUsersDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}GetInternalUsers"
+            Name:
+                 Fn::Sub: "${EnvironmentName}GetInternalUsers"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUsers"
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUsersARN"
             ServiceRoleArn:
                 Fn::GetAtt: GetInternalUsersRole.Arn
     GetInternalUsersResolver:
@@ -1103,18 +1155,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetRoles"
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetRolesARN"
     GetRolesDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}GetRoles"
+            Name:
+                 Fn::Sub: "${EnvironmentName}GetRoles"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetRoles"
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetRolesARN"
             ServiceRoleArn:
                 Fn::GetAtt: GetRolesRole.Arn
     GetRolesResolver:
@@ -1145,18 +1198,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetClient"
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetClientARN"
     GetClientDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}GetClient"
+            Name:
+                 Fn::Sub: "${EnvironmentName}GetClient"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetClient"
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetClientARN"
             ServiceRoleArn:
                 Fn::GetAtt: GetClientRole.Arn
     GetClientResolver:
@@ -1187,18 +1241,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelOnlineOperators"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelOnlineOperatorsARN"
     GetChannelOnlineOperatorsDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}GetChannelOnlineOperators"
+            Name:
+                 Fn::Sub: "${EnvironmentName}GetChannelOnlineOperators"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelOnlineOperators"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelOnlineOperatorsARN"
             ServiceRoleArn:
                 Fn::GetAtt: GetChannelOnlineOperatorsRole.Arn
     GetChannelOnlineOperatorsResolver:
@@ -1229,18 +1284,19 @@ Resources:
                             Action: lambda:InvokeFunction
                             Resource:
                                 Fn::ImportValue:
-                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetClientChatRooms"
+                                    Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetClientChatRoomsARN"
     GetClientChatRoomsDataSource:
         Type: AWS::AppSync::DataSource
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
-            Name: "${EnvironmentName}GetClientChatRooms"
+            Name:
+                 Fn::Sub: "${EnvironmentName}GetClientChatRooms"
             Type: AWS_LAMBDA
             LambdaConfig:
                 LambdaFunctionArn:
                     Fn::ImportValue:
-                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetClientChatRooms"
+                        Fn::Sub: "${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetClientChatRoomsARN"
             ServiceRoleArn:
                 Fn::GetAtt: GetClientChatRoomsRole.Arn
     GetClientChatRoomsResolver:
