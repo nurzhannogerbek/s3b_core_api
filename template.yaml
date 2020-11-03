@@ -12,6 +12,10 @@ Parameters:
         Default: 3beepUserService
     S3Bucket:
         Type: String
+    Auth0Domain:
+        Type: String
+    Auth0ClientID:
+        Type: String
 Conditions:
     IsProductionEnvironment:
         Fn::Equals: [Ref: EnvironmentName, "Prod"]
@@ -41,7 +45,14 @@ Resources:
         Properties:
             Name:
                 Fn::Sub: "${EnvironmentName}3beepCoreApi"
-            AuthenticationType: API_KEY
+            AuthenticationType: OPENID_CONNECT
+            OpenIDConnectConfig:
+                Issuer:
+                    Fn::Sub: "${Auth0Domain}"
+                ClientId:
+                    Fn::Sub: "${Auth0ClientID}"
+            AdditionalAuthenticationProviders:
+                - AuthenticationType: API_KEY
             LogConfig:
                 CloudWatchLogsRoleArn:
                     Fn::GetAtt: CloudWatchLogsRole.Arn

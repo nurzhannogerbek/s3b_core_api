@@ -105,6 +105,8 @@ deploy: &deploy
             export S3_BUCKET='dev-3beep-core-api'
             export STACK_NAME='Dev3beepCoreApi'
             export ENVIRONMENT_NAME='Dev'
+            export AUTH0_DOMAIN=$DEV_AUTH0_DOMAIN
+            export AUTH0_CLIENT_ID=$DEV_AUTH0_CLIENT_ID
           fi
         - >
           if [ $BITBUCKET_BRANCH == 'master' ];
@@ -112,6 +114,8 @@ deploy: &deploy
             export S3_BUCKET='prod-3beep-core-api'
             export STACK_NAME='Prod3beepCoreApi'
             export ENVIRONMENT_NAME='Prod'
+            export AUTH0_DOMAIN=$PROD_AUTH0_DOMAIN
+            export AUTH0_CLIENT_ID=$PROD_AUTH0_CLIENT_ID
           fi
         - pipe: atlassian/aws-s3-deploy:0.4.5
           variables:
@@ -142,6 +146,14 @@ deploy: &deploy
                 {
                   "ParameterKey": "S3Bucket",
                   "ParameterValue": ${S3_BUCKET}
+                },
+                {
+                  "ParameterKey": "Auth0Domain",
+                  "ParameterValue": ${AUTH0_DOMAIN}
+                },
+                {
+                  "ParameterKey": "Auth0ClientID",
+                  "ParameterValue": ${AUTH0_CLIENT_ID}
                 }
               ]
             WAIT: 'true'
