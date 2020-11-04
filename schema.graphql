@@ -523,6 +523,22 @@ type OrganizationOutput @aws_api_key {
 	rootOrganizationDescription: String
 }
 
+type GetClientsOutput @aws_api_key {
+	userId: String
+	userFirstName: String
+	userLastName: String
+	userMiddleName: String
+	userPrimaryEmail: String
+	userSecondaryEmail: String
+	userPrimaryPhoneNumber: String
+	userSecondaryPhoneNumber: String
+	userProfilePhotoUrl: String
+	userType: String
+	metadata: String
+	gender: GenderOutput
+	country: CountryOutput
+}
+
 type Query {
 	# Данный запрос позволяет получить список сообщений определенной чат комнаты.
 	getChatRoomMessages(chatRoomId: String!, fetchSize: Int!, pagingState: String): GetChatRoomMessagesOutput
@@ -593,6 +609,9 @@ type Query {
 		currentPageNumber: Int!,
 		recordsNumber: Int!
 	): [GetClientChatRoomsOutput]
+		@aws_api_key
+	# Данный запрос позволяет получить список клиентов определенной организации.
+	getClients(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): [GetClientsOutput]
 		@aws_api_key
 }
 
