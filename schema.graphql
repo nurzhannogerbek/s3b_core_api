@@ -437,6 +437,16 @@ enum MessageStatusOutput {
 	MESSAGE_IS_READ
 }
 
+type CreateWidgetOutput @aws_api_key {
+    widgetId: String
+}
+
+input CreateWidgetInput {
+    organizationId: String!
+    channelName: String!
+    channelDescription: String
+}
+
 type Mutation {
 	# Данный запрос позволяет создать сообщение в определенной чат комнате.
 	createChatRoomMessage(input: CreateChatRoomMessageInput): CreateChatRoomMessageOutput
@@ -482,6 +492,9 @@ type Mutation {
 		@aws_api_key
 	# Данный запрос позволяет обновлять статус определенного сообщения в определенной чат комнате.
 	updateMessageStatus(input: UpdateMessageStatusInput): UpdateMessageStatusOutput
+		@aws_api_key
+	# Данный запрос позволяет создать виджет с определенными настройками.
+	createWidget(input: CreateWidgetInput): CreateWidgetOutput
 		@aws_api_key
 }
 
