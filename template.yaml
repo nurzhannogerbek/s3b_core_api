@@ -1405,6 +1405,6 @@ Resources:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
             FieldName: createWidget
-            TypeName: Query
+            TypeName: Mutation
             DataSourceName:
                 Fn::GetAtt: CreateWidgetDataSource.Name
