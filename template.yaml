@@ -3,7 +3,6 @@ Transform: AWS::Serverless-2016-10-31
 Parameters:
     EnvironmentName:
         Type: String
-        Default: Test
     ChatServiceStackName:
         Type: String
         Default: 3beepChatService
@@ -18,6 +17,8 @@ Parameters:
     Auth0Domain:
         Type: String
     Auth0ClientID:
+        Type: String
+    GraphQLSchemaFileName:
         Type: String
 Conditions:
     IsProductionEnvironment:
@@ -69,7 +70,7 @@ Resources:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
             DefinitionS3Location:
-                Fn::Sub: "s3://${S3Bucket}/schema.graphql"
+                Fn::Sub: "s3://${S3Bucket}/${GraphQLSchemaFileName}"
     ApiKey:
         Type: AWS::AppSync::ApiKey
         Properties:

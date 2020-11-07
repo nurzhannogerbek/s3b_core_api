@@ -654,18 +654,12 @@ type RoleOutput @aws_api_key {
 }
 
 type Subscription {
-	# Данная подписка позволяет следить за новым созданным сообщением.
-	watchCreateChatRoomMessage(chatRoomId: String, channelId: String): CreateChatRoomMessageOutput
-		@aws_api_key @aws_subscribe(mutations: ["createChatRoomMessage"])
 	# Данная подписка позволяет следить за новым созданным сообщением по id чат комнаты.
 	watchCreateChatRoomMessageByChatRoomId(chatRoomId: String!): CreateChatRoomMessageOutput
 		@aws_api_key @aws_subscribe(mutations: ["createChatRoomMessage"])
 	# Данная подписка позволяет следить за новым созданным сообщением по id канала.
 	watchCreateChatRoomMessageByChannelId(channelId: String!): CreateChatRoomMessageOutput
 		@aws_api_key @aws_subscribe(mutations: ["createChatRoomMessage"])
-	# Данная подписка позволяет следить за обновлениями статуса отправки сообщение в чат комнатах.
-	watchUpdateMessageSendingStatus(chatRoomId: String, channelId: String): UpdateMessageSendingStatusOutput
-		@aws_api_key @aws_subscribe(mutations: ["updateMessageSendingStatus"])
 	# Данная подписка позволяет следить за обновлениями статуса отправки сообщение в чат комнатах по id чат комнаты.
 	watchUpdateMessageSendingStatusByChatRoomId(chatRoomId: String!): UpdateMessageSendingStatusOutput
 		@aws_api_key @aws_subscribe(mutations: ["updateMessageSendingStatus"])
