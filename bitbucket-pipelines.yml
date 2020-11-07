@@ -132,9 +132,7 @@ deploy: &deploy
         - aws configure set default.region $AWS_DEFAULT_REGION
         - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
         - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-        # - aws s3 --recursive mv s3://$S3_BUCKET/schema.graphql s3://$S3_BUCKET/schema$BITBUCKET_BUILD_NUMBER.graphql
         - export GRAPHQL_SCHEMA_FILE_NAME="schema$BITBUCKET_BUILD_NUMBER.graphql"
-        - echo $GRAPHQL_SCHEMA_FILE_NAME
         - aws s3 mv s3://$S3_BUCKET/schema.graphql s3://$S3_BUCKET/$GRAPHQL_SCHEMA_FILE_NAME
         - pipe: atlassian/aws-sam-deploy:0.5.2
           variables:
