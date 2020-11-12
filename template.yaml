@@ -20,6 +20,8 @@ Parameters:
         Type: String
     GraphQLSchemaFileName:
         Type: String
+    ApiKeyExpires:
+        Type: Number
 Conditions:
     IsProductionEnvironment:
         Fn::Equals: [Ref: EnvironmentName, "Prod"]
@@ -76,6 +78,8 @@ Resources:
         Properties:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
+            Expires:
+                Fn::Sub: "{$ApiKeyExpires}"
     CreateChatRoomMessageRole:
         Type: AWS::IAM::Role
         Properties:

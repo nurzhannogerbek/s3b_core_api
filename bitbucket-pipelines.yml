@@ -134,6 +134,7 @@ deploy: &deploy
         - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
         - export GRAPHQL_SCHEMA_FILE_NAME="schema$BITBUCKET_BUILD_NUMBER.graphql"
         - aws s3 mv s3://$S3_BUCKET/schema.graphql s3://$S3_BUCKET/$GRAPHQL_SCHEMA_FILE_NAME
+        - export API_KEY_EXPIRES=`date -v+365d "+%s"`
         - pipe: atlassian/aws-sam-deploy:0.5.2
           variables:
             AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
@@ -164,6 +165,10 @@ deploy: &deploy
                 {
                   "ParameterKey": "GraphQLSchemaFileName",
                   "ParameterValue": ${GRAPHQL_SCHEMA_FILE_NAME}
+                },
+                {
+                  "ParameterKey": "ApiKeyExpires",
+                  "ParameterValue": ${API_KEY_EXPIRES}
                 }
               ]
             WAIT: 'true'
