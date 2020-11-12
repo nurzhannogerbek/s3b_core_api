@@ -547,7 +547,6 @@ type GetClientsOutput @aws_api_key {
 }
 
 type ClientsOutput @aws_api_key {
-    usersOutput
 	userId: String
 	userFirstName: String
 	userLastName: String
