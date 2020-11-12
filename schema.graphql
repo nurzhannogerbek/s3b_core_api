@@ -400,6 +400,11 @@ type GetInternalUserOutput @aws_api_key {
 }
 
 type GetInternalUsersOutput @aws_api_key {
+    totalNumberOfUsers: Int
+    internalUsers: [InternalUsersOutput]
+}
+
+type InternalUsersOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
@@ -537,6 +542,12 @@ type OrganizationOutput @aws_api_key {
 }
 
 type GetClientsOutput @aws_api_key {
+    totalNumberOfUsers: Int
+    clients: [ClientsOutput]
+}
+
+type ClientsOutput @aws_api_key {
+    usersOutput
 	userId: String
 	userFirstName: String
 	userLastName: String
