@@ -79,7 +79,7 @@ Resources:
             ApiId:
                 Fn::GetAtt: GraphQLApi.ApiId
             Expires:
-                Fn::Sub: "{$ApiKeyExpires}"
+                Ref: ApiKeyExpires
     CreateChatRoomMessageRole:
         Type: AWS::IAM::Role
         Properties:
