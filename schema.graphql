@@ -681,7 +681,7 @@ type Subscription {
 		@aws_api_key @aws_subscribe(mutations: ["createChatRoom"])
 	# Данная подписка позволяет следить за назначением оператора в определенную чат комнатами по id чат комнаты.
 	watchAssignChatRoomOperatorByChatRoomId(chatRoomId: String!): AssignChatRoomOperatorOutput
-	    @aws_api_key
+	    @aws_api_key @aws_subscribe(mutations: ["assignChatRoomOperator"])
 	# Данная подписка позволяет следить за назначением оператора в определенную чат комнатами по id канала.
 	watchAssignChatRoomOperatorByChannelId(channelId: String!): AssignChatRoomOperatorOutput
 		@aws_api_key @aws_subscribe(mutations: ["assignChatRoomOperator"])
