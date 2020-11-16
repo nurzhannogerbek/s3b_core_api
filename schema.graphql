@@ -608,7 +608,7 @@ type Query {
 	getInternalUser(auth0UserId: String!): GetInternalUserOutput
 		@aws_api_key
 	# Данный запрос позволяет получить список внутренних пользователей определенной организации.
-	getInternalUsers(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): [GetInternalUsersOutput]
+	getInternalUsers(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): GetInternalUsersOutput
 		@aws_api_key
 	# Данный запрос позволяет получить список доступных ролей в системе.
 	getRoles: [GetRolesOutput]
@@ -634,7 +634,7 @@ type Query {
 	): [GetClientChatRoomsOutput]
 		@aws_api_key
 	# Данный запрос позволяет получить список клиентов определенной организации.
-	getClients(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): [GetClientsOutput]
+	getClients(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): GetClientsOutput
 		@aws_api_key
 }
 
