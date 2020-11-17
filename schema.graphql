@@ -139,6 +139,7 @@ input CreateChatRoomInput @aws_api_key {
 	# Название типа канала. Например: widget, telegram.
 	channelTypeName: String!
 	clientId: String!
+    telegramChatId: String
 }
 
 input CreateChatRoomMessageInput {
