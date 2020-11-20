@@ -140,6 +140,7 @@ input CreateChatRoomInput @aws_api_key {
 	channelTypeName: String!
 	clientId: String!
     telegramChatId: String
+    whatsappChatId: String
 }
 
 input CreateChatRoomMessageInput {
