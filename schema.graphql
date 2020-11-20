@@ -342,6 +342,7 @@ type GetClientChatRoomsOutput @aws_api_key {
 }
 
 type GetClientOutput @aws_api_key {
+	createdDateTime: String
 	userId: String
 	userFirstName: String
 	userLastName: String
@@ -353,6 +354,9 @@ type GetClientOutput @aws_api_key {
 	userProfilePhotoUrl: String
 	userType: String
 	metadata: String
+	telegramUsername: String
+	whatsappProfile: String
+	whatsappUsername: String
 	gender: GenderOutput
 	country: CountryOutput
 }
@@ -549,6 +553,7 @@ type GetClientsOutput @aws_api_key {
 }
 
 type ClientsOutput @aws_api_key {
+	createdDateTime: String
 	userId: String
 	userFirstName: String
 	userLastName: String
@@ -560,6 +565,9 @@ type ClientsOutput @aws_api_key {
 	userProfilePhotoUrl: String
 	userType: String
 	metadata: String
+	telegramUsername: String
+	whatsappProfile: String
+	whatsappUsername: String
 	gender: GenderOutput
 	country: CountryOutput
 }
