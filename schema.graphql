@@ -502,7 +502,7 @@ type RequalifyClientOutput {
 	country: CountryOutput
 }
 
-type DeleteClientsInput {
+input DeleteClientsInput {
     usersIds: [String!]!
 }
 
@@ -510,7 +510,7 @@ type DeleteClientsOutput {
     usersIds: [String]
 }
 
-type DeleteInternalUsersInput {
+input DeleteInternalUsersInput {
     usersIds: [String!]!
 }
 
