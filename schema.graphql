@@ -112,6 +112,26 @@ type ClientOutput @aws_api_key {
 	country: CountryOutput
 }
 
+type ClientsOutput @aws_api_key {
+	createdDateTime: String
+	userId: String
+	userFirstName: String
+	userLastName: String
+	userMiddleName: String
+	userPrimaryEmail: String
+	userSecondaryEmail: String
+	userPrimaryPhoneNumber: String
+	userSecondaryPhoneNumber: String
+	userProfilePhotoUrl: String
+	userType: String
+	metadata: String
+	telegramUsername: String
+	whatsappProfile: String
+	whatsappUsername: String
+	gender: GenderOutput
+	country: CountryOutput
+}
+
 input CloseChatRoomInput {
 	chatRoomId: String!
 	operatorId: String!
@@ -133,14 +153,14 @@ type CountryOutput @aws_api_key {
 	countryCodeTopLevelDomain: String
 }
 
-input CreateChatRoomInput @aws_api_key {
+input CreateChatRoomInput {
 	# Технический идентификатор канала.
 	channelTechnicalId: String!
 	# Название типа канала. Например: widget, telegram.
 	channelTypeName: String!
 	clientId: String!
-    telegramChatId: String
-    whatsappChatId: String
+	telegramChatId: String
+	whatsappChatId: String
 }
 
 input CreateChatRoomMessageInput {
@@ -193,8 +213,8 @@ input CreateIdentifiedUserInput {
 	countryId: String
 	metadata: String!
 	telegramUsername: String
-    whatsappProfile: String
-    whatsappUsername: String
+	whatsappProfile: String
+	whatsappUsername: String
 }
 
 type CreateIdentifiedUserOutput @aws_api_key {
@@ -211,11 +231,11 @@ type CreateIdentifiedUserOutput @aws_api_key {
 	country: CountryOutput
 	metadata: String
 	telegramUsername: String
-    whatsappProfile: String
-    whatsappUsername: String
+	whatsappProfile: String
+	whatsappUsername: String
 }
 
-input CreateInternalUserInput @aws_api_key {
+input CreateInternalUserInput {
 	auth0UserId: String!
 	auth0Metadata: String
 	userFirstName: String
@@ -282,6 +302,32 @@ input CreateUnidentifiedUserInput {
 type CreateUnidentifiedUserOutput @aws_api_key {
 	userId: String
 	metadata: String
+}
+
+input CreateWidgetInput {
+	organizationId: String!
+	channelName: String!
+	channelDescription: String
+}
+
+type CreateWidgetOutput @aws_api_key {
+	widgetId: String
+}
+
+input DeleteClientsInput {
+	usersIds: [String!]!
+}
+
+type DeleteClientsOutput {
+	usersIds: [String]
+}
+
+input DeleteInternalUsersInput {
+	usersIds: [String!]!
+}
+
+type DeleteInternalUsersOutput {
+	usersIds: [String]
 }
 
 type GenderOutput @aws_api_key {
@@ -367,6 +413,11 @@ type GetClientOutput @aws_api_key {
 	country: CountryOutput
 }
 
+type GetClientsOutput @aws_api_key {
+	totalNumberOfUsers: Int
+	clients: [ClientsOutput]
+}
+
 type GetCompletedChatRoomsOutput @aws_api_key {
 	chatRoomId: String
 	lastMessageContent: String
@@ -412,8 +463,21 @@ type GetInternalUserOutput @aws_api_key {
 }
 
 type GetInternalUsersOutput @aws_api_key {
-    totalNumberOfUsers: Int
-    internalUsers: [InternalUsersOutput]
+	totalNumberOfUsers: Int
+	internalUsers: [InternalUsersOutput]
+}
+
+type GetNonAcceptedChatRoomsOutput @aws_api_key {
+	chatRoomId: String
+	channel: ChannelOutput
+	client: ClientOutput
+}
+
+type GetRolesOutput @aws_api_key {
+	roleId: String
+	roleTechnicalName: String
+	rolePublicName: String
+	roleDescription: String
 }
 
 type InternalUsersOutput @aws_api_key {
@@ -435,87 +499,10 @@ type InternalUsersOutput @aws_api_key {
 	organization: OrganizationOutput
 }
 
-type GetNonAcceptedChatRoomsOutput @aws_api_key {
-	chatRoomId: String
-	channel: ChannelOutput
-	client: ClientOutput
-}
-
-type GetRolesOutput @aws_api_key {
-	roleId: String
-	roleTechnicalName: String
-	rolePublicName: String
-	roleDescription: String
-}
-
 enum MessageStatusOutput {
 	MESSAGE_IS_SEND
 	MESSAGE_IS_DELIVERED
 	MESSAGE_IS_READ
-}
-
-type CreateWidgetOutput @aws_api_key {
-    widgetId: String
-}
-
-input CreateWidgetInput {
-    organizationId: String!
-    channelName: String!
-    channelDescription: String
-}
-
-input RequalifyClientInput {
-    userId: String!
-	userFirstName: String
-	userLastName: String
-	userMiddleName: String
-	userPrimaryEmail: String
-	userSecondaryEmail: String
-	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
-	userProfilePhotoUrl: String
-	genderId: String
-	countryId: String
-	metadata: String!
-	telegramUsername: String
-    whatsappProfile: String
-    whatsappUsername: String
-}
-
-type RequalifyClientOutput {
-	createdDateTime: String
-	userId: String
-	userFirstName: String
-	userLastName: String
-	userMiddleName: String
-	userPrimaryEmail: String
-	userSecondaryEmail: String
-	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
-	userProfilePhotoUrl: String
-	userType: String
-	metadata: String
-	telegramUsername: String
-	whatsappProfile: String
-	whatsappUsername: String
-	gender: GenderOutput
-	country: CountryOutput
-}
-
-input DeleteClientsInput {
-    usersIds: [String!]!
-}
-
-type DeleteClientsOutput {
-    usersIds: [String]
-}
-
-input DeleteInternalUsersInput {
-    usersIds: [String!]!
-}
-
-type DeleteInternalUsersOutput {
-    usersIds: [String]
 }
 
 type Mutation {
@@ -567,14 +554,14 @@ type Mutation {
 	# Данный запрос позволяет создать виджет с определенными настройками.
 	createWidget(input: CreateWidgetInput): CreateWidgetOutput
 		@aws_api_key
-    # Данный запрос позволяет переквалифицировать неидентифицированного пользователя в идентифицированного.
-    requalifyClient(input: RequalifyClientInput): RequalifyClientOutput
+	# Данный запрос позволяет переквалифицировать неидентифицированного пользователя в идентифицированного.
+	requalifyClient(input: RequalifyClientInput): RequalifyClientOutput
 		@aws_api_key
-    # Данный запрос позволяет удалить один или несколько выбранных клиентов.
-    deleteClients(input: DeleteClientsInput): DeleteClientsOutput
+	# Данный запрос позволяет удалить один или несколько выбранных клиентов.
+	deleteClients(input: DeleteClientsInput): DeleteClientsOutput
 		@aws_api_key
-    # Данный запрос позволяет удалить один или несколько выбранных внутренних пользователей.
-    deleteInternalUsers(input: DeleteInternalUsersInput): DeleteInternalUsersOutput
+	# Данный запрос позволяет удалить один или несколько выбранных внутренних пользователей.
+	deleteInternalUsers(input: DeleteInternalUsersInput): DeleteInternalUsersOutput
 		@aws_api_key
 }
 
@@ -614,31 +601,6 @@ type OrganizationOutput @aws_api_key {
 	rootOrganizationId: String
 	rootOrganizationName: String
 	rootOrganizationDescription: String
-}
-
-type GetClientsOutput @aws_api_key {
-    totalNumberOfUsers: Int
-    clients: [ClientsOutput]
-}
-
-type ClientsOutput @aws_api_key {
-	createdDateTime: String
-	userId: String
-	userFirstName: String
-	userLastName: String
-	userMiddleName: String
-	userPrimaryEmail: String
-	userSecondaryEmail: String
-	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
-	userProfilePhotoUrl: String
-	userType: String
-	metadata: String
-	telegramUsername: String
-	whatsappProfile: String
-	whatsappUsername: String
-	gender: GenderOutput
-	country: CountryOutput
 }
 
 type Query {
@@ -735,6 +697,44 @@ type QuotedMessageOutput @aws_api_key {
 	messageContentUrl: String
 }
 
+input RequalifyClientInput {
+	userId: String!
+	userFirstName: String
+	userLastName: String
+	userMiddleName: String
+	userPrimaryEmail: String
+	userSecondaryEmail: String
+	userPrimaryPhoneNumber: String
+	userSecondaryPhoneNumber: String
+	userProfilePhotoUrl: String
+	genderId: String
+	countryId: String
+	metadata: String!
+	telegramUsername: String
+	whatsappProfile: String
+	whatsappUsername: String
+}
+
+type RequalifyClientOutput {
+	createdDateTime: String
+	userId: String
+	userFirstName: String
+	userLastName: String
+	userMiddleName: String
+	userPrimaryEmail: String
+	userSecondaryEmail: String
+	userPrimaryPhoneNumber: String
+	userSecondaryPhoneNumber: String
+	userProfilePhotoUrl: String
+	userType: String
+	metadata: String
+	telegramUsername: String
+	whatsappProfile: String
+	whatsappUsername: String
+	gender: GenderOutput
+	country: CountryOutput
+}
+
 type RoleOutput @aws_api_key {
 	roleId: String
 	roleTechnicalName: String
@@ -745,34 +745,44 @@ type RoleOutput @aws_api_key {
 type Subscription {
 	# Данная подписка позволяет следить за новым созданным сообщением по id чат комнаты.
 	watchCreateChatRoomMessageByChatRoomId(chatRoomId: String!): CreateChatRoomMessageOutput
-		@aws_api_key @aws_subscribe(mutations: ["createChatRoomMessage"])
+		@aws_api_key
+@aws_subscribe(mutations: ["createChatRoomMessage"])
 	# Данная подписка позволяет следить за новым созданным сообщением по id канала.
 	watchCreateChatRoomMessageByChannelId(channelId: String!): CreateChatRoomMessageOutput
-		@aws_api_key @aws_subscribe(mutations: ["createChatRoomMessage"])
+		@aws_api_key
+@aws_subscribe(mutations: ["createChatRoomMessage"])
 	# Данная подписка позволяет следить за обновлениями статуса отправки сообщение в чат комнатах по id чат комнаты.
 	watchUpdateMessageSendingStatusByChatRoomId(chatRoomId: String!): UpdateMessageSendingStatusOutput
-		@aws_api_key @aws_subscribe(mutations: ["updateMessageSendingStatus"])
+		@aws_api_key
+@aws_subscribe(mutations: ["updateMessageSendingStatus"])
 	# Данная подписка позволяет следить за обновлениями статуса отправки сообщение в чат комнатах по id канала.
 	watchUpdateMessageSendingStatusByChannelId(channelId: String!): UpdateMessageSendingStatusOutput
-		@aws_api_key @aws_subscribe(mutations: ["updateMessageSendingStatus"])
+		@aws_api_key
+@aws_subscribe(mutations: ["updateMessageSendingStatus"])
 	# Данная подписка позволяет следить за созданными и не принятыми в работу чат комнатами.
 	watchCreateChatRoom(channelId: String!): CreateChatRoomOutput
-		@aws_api_key @aws_subscribe(mutations: ["createChatRoom"])
+		@aws_api_key
+@aws_subscribe(mutations: ["createChatRoom"])
 	# Данная подписка позволяет следить за назначением оператора в определенную чат комнатами по id чат комнаты.
 	watchAssignChatRoomOperatorByChatRoomId(chatRoomId: String!): AssignChatRoomOperatorOutput
-	    @aws_api_key @aws_subscribe(mutations: ["assignChatRoomOperator"])
+		@aws_api_key
+@aws_subscribe(mutations: ["assignChatRoomOperator"])
 	# Данная подписка позволяет следить за назначением оператора в определенную чат комнатами по id канала.
 	watchAssignChatRoomOperatorByChannelId(channelId: String!): AssignChatRoomOperatorOutput
-		@aws_api_key @aws_subscribe(mutations: ["assignChatRoomOperator"])
+		@aws_api_key
+@aws_subscribe(mutations: ["assignChatRoomOperator"])
 	# Данная подписка позволяет следить за закрытием чат комнаты после завершения диалога.
 	watchCloseChatRoom(chatRoomId: String!): CloseChatRoomOutput
-		@aws_api_key @aws_subscribe(mutations: ["closeChatRoom"])
+		@aws_api_key
+@aws_subscribe(mutations: ["closeChatRoom"])
 	# Данная подписка позволяет получить информацию о чат комнате, которую активизировали.
 	watchActivateClosedChatRoom(channelId: String!): ActivateClosedChatRoomOutput
-		@aws_api_key @aws_subscribe(mutations: ["activateClosedChatRoom"])
+		@aws_api_key
+@aws_subscribe(mutations: ["activateClosedChatRoom"])
 	# Данная подписка позволяет получить информацию об обновленном статусе сообщений из определенной чат комнаты.
 	watchUpdateMessageStatus(chatRoomId: String!): UpdateMessageStatusOutput
-		@aws_api_key @aws_subscribe(mutations: ["updateMessageStatus"])
+		@aws_api_key
+@aws_subscribe(mutations: ["updateMessageStatus"])
 }
 
 input UpdateIdentifiedUserInput {
@@ -788,9 +798,9 @@ input UpdateIdentifiedUserInput {
 	genderId: String
 	countryId: String
 	metadata: String!
-    telegramUsername: String
-    whatsappProfile: String
-    whatsappUsername: String
+	telegramUsername: String
+	whatsappProfile: String
+	whatsappUsername: String
 }
 
 type UpdateIdentifiedUserOutput @aws_api_key {
@@ -806,9 +816,9 @@ type UpdateIdentifiedUserOutput @aws_api_key {
 	gender: GenderOutput
 	country: CountryOutput
 	metadata: String
-    telegramUsername: String
-    whatsappProfile: String
-    whatsappUsername: String
+	telegramUsername: String
+	whatsappProfile: String
+	whatsappUsername: String
 }
 
 input UpdateInternalUserInput {
