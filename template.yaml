@@ -1413,3 +1413,132 @@ Resources:
             TypeName: Mutation
             DataSourceName:
                 Fn::GetAtt: CreateWidgetDataSource.Name
+    RequalifyClientRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: RequalifyClientFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}RequalifyClientARN"
+    RequalifyClientDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name:
+                 Fn::Sub: "${EnvironmentName}RequalifyClient"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}RequalifyClientARN"
+            ServiceRoleArn:
+                Fn::GetAtt: RequalifyClientRole.Arn
+    RequalifyClientResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: requalifyClient
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: RequalifyClientDataSource.Name
+    DeleteClientsRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: DeleteClientsFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}DeleteClientsARN"
+    DeleteClientsDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name:
+                 Fn::Sub: "${EnvironmentName}DeleteClients"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}DeleteClientsARN"
+            ServiceRoleArn:
+                Fn::GetAtt: DeleteClientsRole.Arn
+    DeleteClientsResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: deleteClients
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: DeleteClientsDataSource.Name
+    DeleteInternalUsersRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: appsync.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: DeleteInternalUsersFunctionAccess
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action: lambda:InvokeFunction
+                            Resource:
+                                Fn::ImportValue:
+                                    Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}DeleteInternalUsersARN"
+    DeleteInternalUsersDataSource:
+        Type: AWS::AppSync::DataSource
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            Name:
+                 Fn::Sub: "${EnvironmentName}DeleteInternalUsers"
+            Type: AWS_LAMBDA
+            LambdaConfig:
+                LambdaFunctionArn:
+                    Fn::ImportValue:
+                        Fn::Sub: "${EnvironmentName}${UserServiceStackName}:${EnvironmentName}DeleteInternalUsersARN"
+            ServiceRoleArn:
+                Fn::GetAtt: DeleteInternalUsersRole.Arn
+    DeleteInternalUsersResolver:
+        Type: AWS::AppSync::Resolver
+        Properties:
+            ApiId:
+                Fn::GetAtt: GraphQLApi.ApiId
+            FieldName: deleteInternalUsers
+            TypeName: Mutation
+            DataSourceName:
+                Fn::GetAtt: DeleteInternalUsersDataSource.Name

@@ -210,6 +210,9 @@ type CreateIdentifiedUserOutput @aws_api_key {
 	gender: GenderOutput
 	country: CountryOutput
 	metadata: String
+	telegramUsername: String
+    whatsappProfile: String
+    whatsappUsername: String
 }
 
 input CreateInternalUserInput @aws_api_key {
@@ -507,6 +510,14 @@ type DeleteClientsOutput {
     usersIds: [String]
 }
 
+type DeleteInternalUsersInput {
+    usersIds: [String!]!
+}
+
+type DeleteInternalUsersOutput {
+    usersIds: [String]
+}
+
 type Mutation {
 	# Данный запрос позволяет создать сообщение в определенной чат комнате.
 	createChatRoomMessage(input: CreateChatRoomMessageInput): CreateChatRoomMessageOutput
@@ -561,6 +572,9 @@ type Mutation {
 		@aws_api_key
     # Данный запрос позволяет удалить один или несколько выбранных клиентов.
     deleteClients(input: DeleteClientsInput): DeleteClientsOutput
+		@aws_api_key
+    # Данный запрос позволяет удалить один или несколько выбранных внутренних пользователей.
+    deleteInternalUsers(input: DeleteInternalUsersInput): DeleteInternalUsersOutput
 		@aws_api_key
 }
 
@@ -774,6 +788,9 @@ input UpdateIdentifiedUserInput {
 	genderId: String
 	countryId: String
 	metadata: String!
+    telegramUsername: String
+    whatsappProfile: String
+    whatsappUsername: String
 }
 
 type UpdateIdentifiedUserOutput @aws_api_key {
@@ -789,6 +806,9 @@ type UpdateIdentifiedUserOutput @aws_api_key {
 	gender: GenderOutput
 	country: CountryOutput
 	metadata: String
+    telegramUsername: String
+    whatsappProfile: String
+    whatsappUsername: String
 }
 
 input UpdateInternalUserInput {
