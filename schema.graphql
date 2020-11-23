@@ -499,6 +499,14 @@ type RequalifyClientOutput {
 	country: CountryOutput
 }
 
+type DeleteClientsInput {
+    usersIds: [String!]!
+}
+
+type DeleteClientsOutput {
+    usersIds: [String]
+}
+
 type Mutation {
 	# Данный запрос позволяет создать сообщение в определенной чат комнате.
 	createChatRoomMessage(input: CreateChatRoomMessageInput): CreateChatRoomMessageOutput
@@ -550,6 +558,9 @@ type Mutation {
 		@aws_api_key
     # Данный запрос позволяет переквалифицировать неидентифицированного пользователя в идентифицированного.
     requalifyClient(input: RequalifyClientInput): RequalifyClientOutput
+		@aws_api_key
+    # Данный запрос позволяет удалить один или несколько выбранных клиентов.
+    deleteClients(input: DeleteClientsInput): DeleteClientsOutput
 		@aws_api_key
 }
 
