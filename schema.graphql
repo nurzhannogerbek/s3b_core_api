@@ -192,6 +192,9 @@ input CreateIdentifiedUserInput {
 	genderId: String
 	countryId: String
 	metadata: String!
+	telegramUsername: String
+    whatsappProfile: String
+    whatsappUsername: String
 }
 
 type CreateIdentifiedUserOutput @aws_api_key {
@@ -458,6 +461,44 @@ input CreateWidgetInput {
     channelDescription: String
 }
 
+input RequalifyClientInput {
+    userId: String!
+	userFirstName: String
+	userLastName: String
+	userMiddleName: String
+	userPrimaryEmail: String
+	userSecondaryEmail: String
+	userPrimaryPhoneNumber: String
+	userSecondaryPhoneNumber: String
+	userProfilePhotoUrl: String
+	genderId: String
+	countryId: String
+	metadata: String!
+	telegramUsername: String
+    whatsappProfile: String
+    whatsappUsername: String
+}
+
+type RequalifyClientOutput {
+	createdDateTime: String
+	userId: String
+	userFirstName: String
+	userLastName: String
+	userMiddleName: String
+	userPrimaryEmail: String
+	userSecondaryEmail: String
+	userPrimaryPhoneNumber: String
+	userSecondaryPhoneNumber: String
+	userProfilePhotoUrl: String
+	userType: String
+	metadata: String
+	telegramUsername: String
+	whatsappProfile: String
+	whatsappUsername: String
+	gender: GenderOutput
+	country: CountryOutput
+}
+
 type Mutation {
 	# Данный запрос позволяет создать сообщение в определенной чат комнате.
 	createChatRoomMessage(input: CreateChatRoomMessageInput): CreateChatRoomMessageOutput
@@ -506,6 +547,9 @@ type Mutation {
 		@aws_api_key
 	# Данный запрос позволяет создать виджет с определенными настройками.
 	createWidget(input: CreateWidgetInput): CreateWidgetOutput
+		@aws_api_key
+    # Данный запрос позволяет переквалифицировать неидентифицированного пользователя в идентифицированного.
+    requalifyClient(input: RequalifyClientInput): RequalifyClientOutput
 		@aws_api_key
 }
 
