@@ -236,7 +236,7 @@ type CreateIdentifiedUserOutput @aws_api_key {
 }
 
 input CreateInternalUserInput {
-	auth0UserId: String!
+	auth0UserId: String
 	auth0Metadata: String
 	userFirstName: String
 	userLastName: String
@@ -251,6 +251,7 @@ input CreateInternalUserInput {
 	countryId: String
 	roleId: String
 	organizationId: String
+	password: String
 }
 
 type CreateInternalUserOutput @aws_api_key {
@@ -318,7 +319,7 @@ input DeleteClientsInput {
 	usersIds: [String!]!
 }
 
-type DeleteClientsOutput {
+type DeleteClientsOutput @aws_api_key {
 	usersIds: [String]
 }
 
@@ -326,7 +327,7 @@ input DeleteInternalUsersInput {
 	usersIds: [String!]!
 }
 
-type DeleteInternalUsersOutput {
+type DeleteInternalUsersOutput @aws_api_key {
 	usersIds: [String]
 }
 
@@ -715,7 +716,7 @@ input RequalifyClientInput {
 	whatsappUsername: String
 }
 
-type RequalifyClientOutput {
+type RequalifyClientOutput @aws_api_key {
 	createdDateTime: String
 	userId: String
 	userFirstName: String
