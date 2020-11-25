@@ -331,6 +331,14 @@ type DeleteInternalUsersOutput @aws_api_key {
 	usersIds: [String]
 }
 
+input RestoreDeletedInternalUsersInput {
+	usersIds: [String!]!
+}
+
+type RestoreDeletedInternalUsersOutput @aws_api_key {
+	usersIds: [String]
+}
+
 type GenderOutput @aws_api_key {
 	genderId: String
 	genderTechnicalName: String
@@ -468,6 +476,11 @@ type GetInternalUsersOutput @aws_api_key {
 	internalUsers: [InternalUsersOutput]
 }
 
+type GetDeletedInternalUsersOutput @aws_api_key {
+	totalNumberOfUsers: Int
+	internalUsers: [DeletedInternalUsersOutput]
+}
+
 type GetNonAcceptedChatRoomsOutput @aws_api_key {
 	chatRoomId: String
 	channel: ChannelOutput
@@ -482,6 +495,27 @@ type GetRolesOutput @aws_api_key {
 }
 
 type InternalUsersOutput @aws_api_key {
+	auth0UserId: String
+	auth0Metadata: String
+	userId: String
+	userFirstName: String
+	userLastName: String
+	userMiddleName: String
+	userPrimaryEmail: String
+	userSecondaryEmail: String
+	userPrimaryPhoneNumber: String
+	userSecondaryPhoneNumber: String
+	userProfilePhotoUrl: String
+	userPositionName: String
+	gender: GenderOutput
+	country: CountryOutput
+	role: RoleOutput
+	organization: OrganizationOutput
+}
+
+type DeletedInternalUsersOutput @aws_api_key {
+    createdDateTime: String
+    createdDateTime: String
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
@@ -563,6 +597,9 @@ type Mutation {
 		@aws_api_key
 	# Данный запрос позволяет удалить один или несколько выбранных внутренних пользователей.
 	deleteInternalUsers(input: DeleteInternalUsersInput): DeleteInternalUsersOutput
+		@aws_api_key
+	# Данный запрос позволяет восстановить ранее удаленных внутренних пользователей.
+	restoreDeletedInternalUsers(input: RestoreDeletedInternalUsersInput): RestoreDeletedInternalUsersOutput
 		@aws_api_key
 }
 
@@ -677,6 +714,9 @@ type Query {
 		@aws_api_key
 	# Данный запрос позволяет получить список клиентов определенной организации.
 	getClients(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): GetClientsOutput
+		@aws_api_key
+	# Данный запрос позволяет получить список удаленных внутренних пользователей.
+    getDeletedInternalUsers(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): GetDeletedInternalUsersOutput
 		@aws_api_key
 }
 
