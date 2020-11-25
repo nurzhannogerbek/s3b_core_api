@@ -92,13 +92,6 @@ Resources:
         Location:
           'Fn::Sub': >-
             s3://${S3Bucket}/included_templates/chat_service_resources_template.yaml
-  UserServiceResources:
-    'Fn::Transform':
-      Name: 'AWS::Include'
-      Parameters:
-        Location:
-          'Fn::Sub': >-
-            s3://${S3Bucket}/included_templates/user_service_resources_template.yaml
   SettingsServiceResources:
     'Fn::Transform':
       Name: 'AWS::Include'
@@ -106,3 +99,10 @@ Resources:
         Location:
           'Fn::Sub': >-
             s3://${S3Bucket}/included_templates/settings_service_resources_template.yaml
+  UserServiceResources:
+    'Fn::Transform':
+      Name: 'AWS::Include'
+      Parameters:
+        Location:
+          'Fn::Sub': >-
+            s3://${S3Bucket}/included_templates/user_service_resources_template.yaml
