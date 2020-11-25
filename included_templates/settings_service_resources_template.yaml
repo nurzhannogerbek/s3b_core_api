@@ -8,17 +8,17 @@ CreateWidgetRole:
           Principal:
             Service: appsync.amazonaws.com
           Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: CreateWidgetFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${SettingsServiceStackName}:${EnvironmentName}CreateWidgetARN
+    Policies:
+      - PolicyName: CreateWidgetFunctionAccess
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action: 'lambda:InvokeFunction'
+              Resource:
+                'Fn::ImportValue':
+                  'Fn::Sub': >-
+                    ${EnvironmentName}${SettingsServiceStackName}:${EnvironmentName}CreateWidgetARN
 CreateWidgetDataSource:
   Type: 'AWS::AppSync::DataSource'
   Properties:
