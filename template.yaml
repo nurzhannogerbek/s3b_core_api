@@ -1,100 +1,108 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
+Transform: 'AWS::Serverless-2016-10-31'
 Parameters:
-    EnvironmentName:
-        Type: String
-    ChatServiceStackName:
-        Type: String
-        Default: 3beepChatService
-    UserServiceStackName:
-        Type: String
-        Default: 3beepUserService
-    SettingsServiceStackName:
-        Type: String
-        Default: 3beepSettingsService
-    S3Bucket:
-        Type: String
-    Auth0Domain:
-        Type: String
-    Auth0ClientID:
-        Type: String
-    GraphQLSchemaFileName:
-        Type: String
-    ApiKeyExpires:
-        Type: Number
+  EnvironmentName:
+    Type: String
+  ChatServiceStackName:
+    Type: String
+    Default: 3beepChatService
+  UserServiceStackName:
+    Type: String
+    Default: 3beepUserService
+  SettingsServiceStackName:
+    Type: String
+    Default: 3beepSettingsService
+  S3Bucket:
+    Type: String
+  Auth0Domain:
+    Type: String
+  Auth0ClientID:
+    Type: String
+  GraphQLSchemaFileName:
+    Type: String
+  ApiKeyExpires:
+    Type: Number
 Conditions:
-    IsProductionEnvironment:
-        Fn::Equals: [Ref: EnvironmentName, "Prod"]
+  IsProductionEnvironment:
+    'Fn::Equals':
+      - Ref: EnvironmentName
+      - Prod
 Resources:
-    CloudWatchLogsRole:
-        Type: AWS::IAM::Role
-        Properties:
-            AssumeRolePolicyDocument:
-                Version: "2012-10-17"
-                Statement:
-                    - Effect: Allow
-                      Principal:
-                          Service: appsync.amazonaws.com
-                      Action: sts:AssumeRole
-            Policies:
-                - PolicyName: CloudWatchLogsAccess
-                  PolicyDocument:
-                      Version: "2012-10-17"
-                      Statement:
-                          - Effect: Allow
-                            Action:
-                                - logs:CreateLogStream
-                                - logs:PutLogEvents
-                            Resource: "*"
-    GraphQLApi:
-        Type: AWS::AppSync::GraphQLApi
-        Properties:
-            Name:
-                Fn::Sub: "${EnvironmentName}3beepCoreApi"
-            AuthenticationType: OPENID_CONNECT
-            OpenIDConnectConfig:
-                Issuer:
-                    Fn::Sub: "${Auth0Domain}"
-                ClientId:
-                    Fn::Sub: "${Auth0ClientID}"
-            AdditionalAuthenticationProviders:
-                - AuthenticationType: API_KEY
-            LogConfig:
-                CloudWatchLogsRoleArn:
-                    Fn::GetAtt: CloudWatchLogsRole.Arn
-                ExcludeVerboseContent: False
-                FieldLogLevel:
-                    Fn::If: [IsProductionEnvironment, ERROR, ALL]
-            XrayEnabled: False
-    GraphQLSchema:
-        Type: AWS::AppSync::GraphQLSchema
-        Properties:
-            ApiId:
-                Fn::GetAtt: GraphQLApi.ApiId
-            DefinitionS3Location:
-                Fn::Sub: "s3://${S3Bucket}/${GraphQLSchemaFileName}"
-    ApiKey:
-        Type: AWS::AppSync::ApiKey
-        Properties:
-            ApiId:
-                Fn::GetAtt: GraphQLApi.ApiId
-            Expires:
-                Ref: ApiKeyExpires
-    ChatServiceResources:
-        Fn::Transform:
-            Name: AWS::Include
-            Parameters:
-                Location:
-                    Fn::Sub: "s3://${S3Bucket}/included_templates/chat_service_resources_template.yaml"
-    UserServiceResources:
-        Fn::Transform:
-            Name: AWS::Include
-            Parameters:
-                Location:
-                    Fn::Sub: "s3://${S3Bucket}/included_templates/user_service_resources_template.yaml"
-    SettingsServiceResources:
-        Fn::Transform:
-            Name: AWS::Include
-            Parameters:
-                Location:
-                    Fn::Sub: "s3://${S3Bucket}/included_templates/settings_service_resources_template.yaml"
+  CloudWatchLogsRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: CloudWatchLogsAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: '*'
+  GraphQLApi:
+    Type: 'AWS::AppSync::GraphQLApi'
+    Properties:
+      Name:
+        'Fn::Sub': '${EnvironmentName}3beepCoreApi'
+      AuthenticationType: OPENID_CONNECT
+      OpenIDConnectConfig:
+        Issuer:
+          'Fn::Sub': '${Auth0Domain}'
+        ClientId:
+          'Fn::Sub': '${Auth0ClientID}'
+      AdditionalAuthenticationProviders:
+        - AuthenticationType: API_KEY
+      LogConfig:
+        CloudWatchLogsRoleArn:
+          'Fn::GetAtt': CloudWatchLogsRole.Arn
+        ExcludeVerboseContent: false
+        FieldLogLevel:
+          'Fn::If':
+            - IsProductionEnvironment
+            - ERROR
+            - ALL
+      XrayEnabled: false
+  GraphQLSchema:
+    Type: 'AWS::AppSync::GraphQLSchema'
+    Properties:
+      ApiId:
+        'Fn::GetAtt': GraphQLApi.ApiId
+      DefinitionS3Location:
+        'Fn::Sub': 's3://${S3Bucket}/${GraphQLSchemaFileName}'
+  ApiKey:
+    Type: 'AWS::AppSync::ApiKey'
+    Properties:
+      ApiId:
+        'Fn::GetAtt': GraphQLApi.ApiId
+      Expires:
+        Ref: ApiKeyExpires
+  ChatServiceResources:
+    'Fn::Transform':
+      Name: 'AWS::Include'
+      Parameters:
+        Location:
+          'Fn::Sub': >-
+            s3://${S3Bucket}/included_templates/chat_service_resources_template.yaml
+  UserServiceResources:
+    'Fn::Transform':
+      Name: 'AWS::Include'
+      Parameters:
+        Location:
+          'Fn::Sub': >-
+            s3://${S3Bucket}/included_templates/user_service_resources_template.yaml
+  SettingsServiceResources:
+    'Fn::Transform':
+      Name: 'AWS::Include'
+      Parameters:
+        Location:
+          'Fn::Sub': >-
+            s3://${S3Bucket}/included_templates/settings_service_resources_template.yaml
