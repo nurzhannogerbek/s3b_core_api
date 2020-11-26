@@ -1,101 +1,5 @@
-# ~ aws-sam-deploy properties ~
-#
-# Variable: AWS_ACCESS_KEY_ID
-# Usage: AWS access key.
-#
-# Variable: AWS_SECRET_ACCESS_KEY
-# Usage: AWS secret key.
-#
-# Variable: AWS_DEFAULT_REGION
-# Usage: The AWS region code (us-east-1, us-west-2, etc.) of the region containing the AWS resource(s).
-#
-# Variable: S3_BUCKET
-# Usage: The name of the AWS S3 bucket for artifacts.
-#
-# Variable: STACK_NAME
-# Usage: The name of the AWS CloudFormation stack. If the stack does not exist, it will be created.
-#
-# Variable: CAPABILITIES
-# Usage: Array of capabilities.
-#        Allowed values: [CAPABILITY_IAM, CAPABILITY_NAMED_IAM, CAPABILITY_AUTO_EXPAND].
-#
-# Variable: SAM_TEMPLATE
-# Usage: Location of the file containing a SAM template body in your repository.
-#        Default: template.yaml.
-#        Valid template body formats are: json or yaml.
-#
-# Variable: CFN_TEMPLATE
-# Usage: Name of the CloudFormation template to generate.
-#        Default: packaged.yml.
-#
-# Variable: TEMPLATE
-# Usage: Location of the file containing a packaged CloudFormation template body in your repository or a URL that points to the template hosted in an Amazon S3 bucket.
-#        Default: $BITBUCKET_PIPE_STORAGE_DIR/packaged.yml stored locally after executing the pipe with the 'package-only' or 'all' command.
-#        Valid template body formats are: json or yaml.
-#
-# Variable: COMMAND
-# Usage: Command to be executed during the deployment.
-#        Valid options are all, package-only, deploy-only.
-#        Default: all.
-#
-# Variable: STACK_PARAMETERS
-# Usage: JSON document containing variables to pass to a pipeline you want to trigger.
-#        The value should be a list of object with ParameterKey, ParameterValue fields for each of your variables.
-#        The Examples section below contains an example for passing parameters to the stack.
-#
-# Variable: WAIT
-# Usage: Wait for deployment to complete.
-#        Default: false.
-#        If false, it will finish when the cloudformation deploy is triggered and will not wait until the resources are successfully created.
-#
-# Variable: WAIT_INTERVAL
-# Usage: Time to wait between polling for deployment to complete (in seconds).
-#        Default: 30.
-#
-# Variable: DEBUG
-# Usage: Turn on extra debug information.
-#        Default: false.
-#
-# ~ aws-s3-deploy properties ~
-#
-# Variable: LOCAL_PATH
-# Usage: Local path to folder to be deployed.
-#
-# Variable: CONTENT_ENCODING
-# Usage: Content encodings that have been applied to the object.
-#
-# Variable: ACL
-# Usage: ACL for the object when the command is performed.
-#        Valid values are: private, public-read, public-read-write, authenticated-read, bucket-owner-read, bucket-owner-full-control.
-#
-# Variable: STORAGE_CLASS
-# Usage: Type of storage to use for the object.
-#        Valid options are STANDARD, REDUCED_REDUNDANCY, STANDARD_IA, ONEZONE_IA.
-#        Default: STANDARD.
-#
-# Variable: CACHE_CONTROL
-# Usage: Caching behavior along the request/reply chain.
-#        Valid options are no-cache, no-store, max-age=<seconds>, s-maxage=<seconds> no-transform, public, private.
-#
-# Variable: EXPIRES
-# Usage: Date and time at which the object is no longer cacheable.
-#        ISO 8601 format: YYYY-MM-DDThh:mm:ssTZD.
-#        Defaults to unset.
-#
-# Variable: DELETE_FLAG
-# Usage: Destination path is cleaned up before the upload.
-#        Default: false.
-#
-# Variable: EXTRA_ARGS
-# Usage: Extra arguments to be passed to the CLI (see AWS docs for more details).
-#        Defaults to unset.
-#
-# Variable: DEBUG
-# Usage: Turn on extra debug information.
-#        Default: false.
 image:
   name: python:3.8
-
 deploy: &deploy
   - step:
       script:
@@ -124,7 +28,7 @@ deploy: &deploy
             AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
             S3_BUCKET: $S3_BUCKET
             LOCAL_PATH: '$(pwd)'
-            EXTRA_ARGS: '--exclude=* --include=*.graphql --include=included_templates/*'
+            EXTRA_ARGS: '--exclude=* --include=*.graphql --include=template.yaml'
             DELETE_FLAG: 'true'
             DEBUG: 'true'
         - apt-get update && apt-get install -y python3-pip
@@ -135,15 +39,15 @@ deploy: &deploy
         - export GRAPHQL_SCHEMA_FILE_NAME="schema$BITBUCKET_BUILD_NUMBER.graphql"
         - aws s3 mv s3://$S3_BUCKET/schema.graphql s3://$S3_BUCKET/$GRAPHQL_SCHEMA_FILE_NAME
         - export API_KEY_EXPIRES=`date +%s -d "365 day"` # The Linux command which returns the unix epoch timestamp format.
+        - export CLOUDFORMATION_TEMPLATE="https://$S3_BUCKET.s3.$AWS_DEFAULT_REGION.amazonaws.com/template.yaml"
         - pipe: atlassian/aws-sam-deploy:0.5.2
           variables:
             AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
             AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
             AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-            S3_BUCKET: $S3_BUCKET
             STACK_NAME: $STACK_NAME
+            TEMPLATE: $CLOUDFORMATION_TEMPLATE
             CAPABILITIES: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM', 'CAPABILITY_AUTO_EXPAND']
-            SAM_TEMPLATE: 'template.yaml'
             STACK_PARAMETERS: >
               [
                 {
@@ -174,7 +78,6 @@ deploy: &deploy
             WAIT: 'true'
             WAIT_INTERVAL: 60
             DEBUG: 'true'
-
 pipelines:
   branches:
     develop:
