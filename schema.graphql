@@ -878,6 +878,7 @@ input UpdateInternalUserInput {
 	countryId: String
 	roleId: String
 	organizationId: String
+	password: String
 }
 
 type UpdateInternalUserOutput @aws_api_key {
