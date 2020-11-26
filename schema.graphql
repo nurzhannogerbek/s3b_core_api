@@ -515,7 +515,7 @@ type InternalUsersOutput @aws_api_key {
 
 type DeletedInternalUsersOutput @aws_api_key {
     createdDateTime: String
-    createdDateTime: String
+    deletedDateTime: String
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
