@@ -1,6 +1,7 @@
 input ActivateClosedChatRoomInput {
 	chatRoomId: String!
 	clientId: String!
+    lastMessageContent: String!
 }
 
 type ActivateClosedChatRoomOutput @aws_api_key {
@@ -10,6 +11,9 @@ type ActivateClosedChatRoomOutput @aws_api_key {
 	channel: ChannelOutput
 	client: ClientOutput
 	organizationsIds: [String]
+	lastMessageContent: String
+	lastMessageDateTime: String
+	unreadMessagesNumber: Int
 }
 
 input AssignChatRoomOperatorInput {
@@ -143,6 +147,7 @@ input CloseChatRoomInput {
 
 type CloseChatRoomOutput @aws_api_key {
 	chatRoomId: String
+	channelId: String
 	chatRoomStatus: String
 	operator: OperatorOutput
 }
@@ -201,6 +206,9 @@ type CreateChatRoomOutput @aws_api_key {
 	channelId: String
 	client: ClientOutput
 	organizationsIds: [String]
+	lastMessageContent: String
+	lastMessageDateTime: String
+	unreadMessagesNumber: Int
 }
 
 input CreateIdentifiedUserInput {
