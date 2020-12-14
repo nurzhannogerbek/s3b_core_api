@@ -161,6 +161,7 @@ input CreateChatRoomInput {
 	channelTechnicalId: String!
 	channelTypeName: String!
 	clientId: String!
+    lastMessageContent: String!
 	telegramChatId: String = null
 	whatsappChatId: String = null
 }
