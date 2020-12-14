@@ -97,6 +97,7 @@ type ChatRoomOperatorsOutput @aws_api_key {
 }
 
 type ClientOutput @aws_api_key {
+    userType: String
 	userId: String
 	userFirstName: String
 	userLastName: String
@@ -106,10 +107,12 @@ type ClientOutput @aws_api_key {
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: String
 	userProfilePhotoUrl: String
-	userType: String
-	metadata: String
 	gender: GenderOutput
 	country: CountryOutput
+	metadata: String
+	telegramUsername: String
+	whatsappProfile: String
+	whatsappUsername: String
 }
 
 type ClientsOutput @aws_api_key {
@@ -135,6 +138,7 @@ type ClientsOutput @aws_api_key {
 input CloseChatRoomInput {
 	chatRoomId: String!
 	operatorId: String!
+	channelId: String!
 }
 
 type CloseChatRoomOutput @aws_api_key {
@@ -154,13 +158,11 @@ type CountryOutput @aws_api_key {
 }
 
 input CreateChatRoomInput {
-	# Технический идентификатор канала.
 	channelTechnicalId: String!
-	# Название типа канала. Например: widget, telegram.
 	channelTypeName: String!
 	clientId: String!
-	telegramChatId: String
-	whatsappChatId: String
+	telegramChatId: String = null
+	whatsappChatId: String = null
 }
 
 input CreateChatRoomMessageInput {
