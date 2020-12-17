@@ -932,7 +932,7 @@ type UpdateMessageSendingStatusOutput @aws_api_key {
 
 input UpdateMessageStatusInput {
 	chatRoomId: String!
-	messagesIds: [String!
+	messagesIds: [String!]!
 	messageStatus: MessageStatusOutput!
 }
 
