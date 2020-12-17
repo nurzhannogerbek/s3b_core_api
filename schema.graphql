@@ -65,16 +65,16 @@ type ChatRoomClientOutput @aws_api_key {
 }
 
 type ChatRoomMessage @aws_api_key {
-	messageCreatedDateTime: String!
-	messageUpdatedDateTime: String!
+	messageCreatedDateTime: String
+	messageUpdatedDateTime: String
 	messageDeletedDateTime: String
-	messageIsSent: Boolean!
-	messageIsDelivered: Boolean!
-	messageIsRead: Boolean!
-	messageId: String!
-	messageAuthorId: String!
-	messageChannelId: String!
-	messageType: String!
+	messageIsSent: Boolean
+	messageIsDelivered: Boolean
+	messageIsRead: Boolean
+	messageId: String
+	messageAuthorId: String
+	messageChannelId: String
+	messageType: String
 	messageText: String
 	messageContentUrl: String
 	quotedMessage: QuotedMessageOutput
@@ -932,25 +932,13 @@ type UpdateMessageSendingStatusOutput @aws_api_key {
 
 input UpdateMessageStatusInput {
 	chatRoomId: String!
-	messageId: String!
+	messagesIds: [String!
 	messageStatus: MessageStatusOutput!
 }
 
 type UpdateMessageStatusOutput @aws_api_key {
 	chatRoomId: String
-	messageCreatedDateTime: String
-	messageUpdatedDateTime: String
-	messageDeletedDateTime: String
-	messageIsSent: Boolean
-	messageIsDelivered: Boolean
-	messageIsRead: Boolean
-	messageId: String
-	messageAuthorId: String
-	messageChannelId: String
-	messageType: String
-	messageText: String
-	messageContentUrl: String
-	quotedMessage: QuotedMessageOutput
+	chatRoomMessages: [ChatRoomMessage]
 }
 
 input UpdateOrganizationInput {
