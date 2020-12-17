@@ -937,7 +937,6 @@ input UpdateMessageStatusInput {
 }
 
 type UpdateMessageStatusOutput @aws_api_key {
-	channelId: String
 	chatRoomId: String
 	messageCreatedDateTime: String
 	messageUpdatedDateTime: String
