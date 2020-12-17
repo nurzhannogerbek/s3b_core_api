@@ -179,6 +179,8 @@ input CreateChatRoomMessageInput {
 	messageText: String
 	messageContentUrl: String
 	quotedMessage: QuotedMessageInput
+	localMessageId: String = null
+	increaseUnreadMessagesNumber: Boolean!
 }
 
 type CreateChatRoomMessageOutput @aws_api_key {
@@ -197,6 +199,7 @@ type CreateChatRoomMessageOutput @aws_api_key {
 	messageText: String
 	messageContentUrl: String
 	quotedMessage: QuotedMessageOutput
+	localMessageId: String
 }
 
 type CreateChatRoomOutput @aws_api_key {
