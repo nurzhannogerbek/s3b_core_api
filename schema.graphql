@@ -660,7 +660,7 @@ type OrganizationOutput @aws_api_key {
 
 type Query {
 	# Данный запрос позволяет получить список сообщений определенной чат комнаты.
-	getChatRoomMessages(chatRoomId: String!, fetchSize: Int!, pagingState: String): GetChatRoomMessagesOutput
+	getChatRoomMessages(chatRoomId: String!, fetchSize: Int! = 100, pagingState: String = null): GetChatRoomMessagesOutput
 		@aws_api_key
 	# Данный запрос позволяет получить список типов каналов и каналов, которые может обслужить определенный внутренний пользователь.
 	getChannelsTypesAndChannels(userId: String!): [GetChannelsTypesAndChannelsOutput]
