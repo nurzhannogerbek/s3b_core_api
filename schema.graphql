@@ -688,8 +688,6 @@ type Query {
 	getCompletedChatRooms(
 		operatorId: String!,
 		channelsIds: [String!]!,
-		fetchSize: Int!,
-		pagingState: String,
 		startDateTime: String,
 		endDateTime: String
 	): [GetCompletedChatRoomsOutput]
