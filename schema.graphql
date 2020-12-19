@@ -497,6 +497,9 @@ type GetDeletedInternalUsersOutput @aws_api_key {
 
 type GetNonAcceptedChatRoomsOutput @aws_api_key {
 	chatRoomId: String
+	lastMessageContent: String
+	lastMessageDateTime: String
+	unreadMessagesNumber: Int
 	channel: ChannelOutput
 	client: ClientOutput
 }
