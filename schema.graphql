@@ -49,6 +49,7 @@ type ChannelTypeOutput @aws_api_key {
 
 type ChatRoomClientOutput @aws_api_key {
 	chatRoomMemberSinceDateTime: String
+	userType: String
 	userId: String
 	userFirstName: String
 	userLastName: String
@@ -58,10 +59,12 @@ type ChatRoomClientOutput @aws_api_key {
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: String
 	userProfilePhotoUrl: String
-	userType: String
-	metadata: String
 	gender: GenderOutput
 	country: CountryOutput
+	metadata: String
+	telegramUsername: String
+	whatsappProfile: String
+	whatsappUsername: String
 }
 
 type ChatRoomMessage @aws_api_key {
