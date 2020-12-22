@@ -551,7 +551,7 @@ type DeletedInternalUsersOutput @aws_api_key {
 }
 
 enum MessageStatusOutput {
-	MESSAGE_IS_SEND
+	MESSAGE_IS_SENT
 	MESSAGE_IS_DELIVERED
 	MESSAGE_IS_READ
 }
