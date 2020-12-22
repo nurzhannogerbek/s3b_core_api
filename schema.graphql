@@ -559,6 +559,13 @@ enum MessageStatusOutput {
 	MESSAGE_IS_READ
 }
 
+enum ChannelTypeNameOutput {
+    widget
+    dashboard
+    telegram
+    whatsapp
+}
+
 type Mutation {
 	# Данный запрос позволяет создать сообщение в определенной чат комнате.
 	createChatRoomMessage(input: CreateChatRoomMessageInput): CreateChatRoomMessageOutput
@@ -715,7 +722,7 @@ type Query {
 	# Данный запрос позволяет получить список онлайн операторов, которые могут обслужить определенный канал.
 	getChannelOnlineOperators(
 		channelTechnicalId: String!,
-		channelTypeName: String!,
+		channelTypeName: ChannelTypeNameOutput!,
 		currentPageNumber: Int!,
 		recordsNumber: Int!
 	): [GetChannelOnlineOperatorsOutput]
