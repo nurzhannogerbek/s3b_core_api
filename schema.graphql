@@ -599,8 +599,8 @@ type Mutation {
 	# Данный запрос позволяет обновить информацию определенного неидентифицированного пользователя.
 	updateUnidentifiedUser(input: UpdateUnidentifiedUserInput): UpdateUnidentifiedUserOutput
 		@aws_api_key
-	# Данный запрос позволяет обновлять статус определенного сообщения в определенной чат комнате.
-	updateMessageStatus(input: UpdateMessageStatusInput): UpdateMessageStatusOutput
+	# Данный запрос позволяет обновлять статус сообщения и количество непрочитанных сообщений в чат комнате.
+	updateMessageData(input: UpdateMessageDataInput): UpdateMessageDataOutput
 		@aws_api_key
 	# Данный запрос позволяет создать виджет с определенными настройками.
 	createWidget(input: CreateWidgetInput): CreateWidgetOutput
@@ -835,9 +835,9 @@ type Subscription {
 		@aws_api_key
 @aws_subscribe(mutations: ["activateClosedChatRoom"])
 	# Данная подписка позволяет получить информацию об обновленном статусе сообщений из определенной чат комнаты.
-	watchUpdateMessageStatus(chatRoomId: String!): UpdateMessageStatusOutput
+	watchUpdateMessageData(chatRoomId: String!): UpdateMessageDataOutput
 		@aws_api_key
-@aws_subscribe(mutations: ["updateMessageStatus"])
+@aws_subscribe(mutations: ["updateMessageData"])
 }
 
 input UpdateIdentifiedUserInput {
@@ -930,15 +930,17 @@ type UpdateMessageSendingStatusOutput @aws_api_key {
 	messageText: String
 }
 
-input UpdateMessageStatusInput {
+input UpdateMessageDataInput {
 	chatRoomId: String!
 	messagesIds: [String!]!
 	messageStatus: MessageStatusOutput!
+	isClient: Boolean!
 }
 
-type UpdateMessageStatusOutput @aws_api_key {
+type UpdateMessageDataOutput @aws_api_key {
 	chatRoomId: String
 	chatRoomMessages: [ChatRoomMessage]
+    unreadMessagesNumber: Int
 }
 
 input UpdateOrganizationInput {
