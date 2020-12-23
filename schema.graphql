@@ -188,6 +188,7 @@ input CreateChatRoomMessageInput {
 type CreateChatRoomMessageOutput @aws_api_key {
 	channelId: String
 	chatRoomId: String
+    chatRoomStatus: String
 	messageCreatedDateTime: String
 	messageUpdatedDateTime: String
 	messageDeletedDateTime: String
@@ -949,6 +950,7 @@ input UpdateMessageDataInput {
 
 type UpdateMessageDataOutput @aws_api_key {
 	chatRoomId: String
+	chatRoomStatus: String
 	chatRoomMessages: [ChatRoomMessage]
     unreadMessagesNumber: Int
 }
