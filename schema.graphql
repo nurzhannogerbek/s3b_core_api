@@ -730,7 +730,7 @@ type Query {
 	# Данный запрос позволяет получить список чат комнат в рамках канала определенного клиента.
 	getClientChatRooms(
 		channelTechnicalId: String!,
-		channelTypeName: String!,
+		channelTypeName: ChannelTypeNameOutput!,
 		clientId: String!,
 		currentPageNumber: Int!,
 		recordsNumber: Int!
