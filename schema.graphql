@@ -187,6 +187,7 @@ input CreateChatRoomMessageInput {
 
 type CreateChatRoomMessageOutput @aws_api_key {
 	channelId: String
+	channelTypeName: String
 	chatRoomId: String
     chatRoomStatus: String
 	messageCreatedDateTime: String
