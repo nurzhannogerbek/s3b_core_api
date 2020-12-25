@@ -849,7 +849,7 @@ type Subscription {
 	watchUpdateMessageDataByChatRoomId(chatRoomId: String!): UpdateMessageDataOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["updateMessageData"])
-	# Данная подписка позволяет получить информацию об обновленном статусе сообщений из определенной чат комнаты по id чат комнаты.
+	# Данная подписка позволяет получить информацию об обновленном статусе сообщений из определенной чат комнаты по id канала.
 	watchUpdateMessageDataByChannelId(channelId: String!): UpdateMessageDataOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["updateMessageData"])
