@@ -845,8 +845,12 @@ type Subscription {
 	watchActivateClosedChatRoom(channelId: String!): ActivateClosedChatRoomOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["activateClosedChatRoom"])
-	# Данная подписка позволяет получить информацию об обновленном статусе сообщений из определенной чат комнаты.
-	watchUpdateMessageData(chatRoomId: String!): UpdateMessageDataOutput
+	# Данная подписка позволяет получить информацию об обновленном статусе сообщений из определенной чат комнаты по id чат комнаты.
+	watchUpdateMessageDataByChatRoomId(chatRoomId: String!): UpdateMessageDataOutput
+		@aws_api_key
+@aws_subscribe(mutations: ["updateMessageData"])
+	# Данная подписка позволяет получить информацию об обновленном статусе сообщений из определенной чат комнаты по id чат комнаты.
+	watchUpdateMessageDataByChannelId(channelId: String!): UpdateMessageDataOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["updateMessageData"])
 }
@@ -950,6 +954,7 @@ input UpdateMessageDataInput {
 
 type UpdateMessageDataOutput @aws_api_key {
 	chatRoomId: String
+	channelId: String
 	chatRoomStatus: String
 	chatRoomMessages: [ChatRoomMessage]
     unreadMessagesNumber: Int
