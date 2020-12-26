@@ -20,6 +20,7 @@ input AssignChatRoomOperatorInput {
 	chatRoomId: String!
 	operatorId: String!
 	clientId: String!
+	roleTechnicalName: String!
 }
 
 type AssignChatRoomOperatorOutput @aws_api_key {
