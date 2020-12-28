@@ -960,6 +960,8 @@ type UpdateMessageDataOutput @aws_api_key {
 	chatRoomStatus: String
 	chatRoomMessages: [ChatRoomMessage]
     unreadMessagesNumber: Int
+    channelTypeName: String
+    isClient: Boolean
 }
 
 input UpdateOrganizationInput {
