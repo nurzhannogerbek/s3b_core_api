@@ -839,8 +839,12 @@ type Subscription {
 	watchAssignChatRoomOperatorByChannelId(channelId: String!): AssignChatRoomOperatorOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["assignChatRoomOperator"])
-	# Данная подписка позволяет следить за закрытием чат комнаты после завершения диалога.
-	watchCloseChatRoom(chatRoomId: String!): CloseChatRoomOutput
+	# Данная подписка позволяет следить за закрытием чат комнаты после завершения диалога по id чат комнаты.
+	watchCloseChatRoomByChatRoomId(chatRoomId: String!): CloseChatRoomOutput
+		@aws_api_key
+@aws_subscribe(mutations: ["closeChatRoom"])
+	# Данная подписка позволяет следить за закрытием чат комнаты после завершения диалога по id канала.
+	watchCloseChatRoomByChannelId(channelId: String!): CloseChatRoomOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["closeChatRoom"])
 	# Данная подписка позволяет получить информацию о чат комнате, которую активизировали.
