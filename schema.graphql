@@ -13,6 +13,7 @@ type ActivateClosedChatRoomOutput @aws_api_key {
 	organizationsIds: [String]
 	lastMessageContent: String
 	lastMessageDateTime: String
+	lastMessageFromClientDateTime: String
 	unreadMessagesNumber: Int
 }
 
@@ -184,6 +185,7 @@ input CreateChatRoomMessageInput {
 	messageContentUrl: String
 	quotedMessage: QuotedMessageInput
 	localMessageId: String = null
+	isClient: Boolean!
 }
 
 type CreateChatRoomMessageOutput @aws_api_key {
@@ -216,6 +218,7 @@ type CreateChatRoomOutput @aws_api_key {
 	organizationsIds: [String]
 	lastMessageContent: String
 	lastMessageDateTime: String
+	lastMessageFromClientDateTime: String
 	unreadMessagesNumber: Int
 }
 
@@ -368,6 +371,7 @@ type GetAcceptedChatRoomsOutput @aws_api_key {
 	chatRoomId: String
 	lastMessageContent: String
 	lastMessageDateTime: String
+	lastMessageFromClientDateTime: String
 	unreadMessagesNumber: Int
 	channel: ChannelOutput
 	client: ClientOutput
@@ -450,6 +454,7 @@ type GetCompletedChatRoomsOutput @aws_api_key {
 	chatRoomId: String
 	lastMessageContent: String
 	lastMessageDateTime: String
+	lastMessageFromClientDateTime: String
 	unreadMessagesNumber: Int
 	channel: ChannelOutput
 	client: ClientOutput
@@ -504,6 +509,7 @@ type GetNonAcceptedChatRoomsOutput @aws_api_key {
 	chatRoomId: String
 	lastMessageContent: String
 	lastMessageDateTime: String
+    lastMessageFromClientDateTime: String
 	unreadMessagesNumber: Int
 	channel: ChannelOutput
 	client: ClientOutput
@@ -839,8 +845,12 @@ type Subscription {
 	watchAssignChatRoomOperatorByChannelId(channelId: String!): AssignChatRoomOperatorOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["assignChatRoomOperator"])
-	# Данная подписка позволяет следить за закрытием чат комнаты после завершения диалога.
-	watchCloseChatRoom(chatRoomId: String!): CloseChatRoomOutput
+	# Данная подписка позволяет следить за закрытием чат комнаты после завершения диалога по id чат комнаты.
+	watchCloseChatRoomByChatRoomId(chatRoomId: String!): CloseChatRoomOutput
+		@aws_api_key
+@aws_subscribe(mutations: ["closeChatRoom"])
+	# Данная подписка позволяет следить за закрытием чат комнаты после завершения диалога по id канала.
+	watchCloseChatRoomByChannelId(channelId: String!): CloseChatRoomOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["closeChatRoom"])
 	# Данная подписка позволяет получить информацию о чат комнате, которую активизировали.
