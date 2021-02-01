@@ -174,6 +174,7 @@ input CreateChatRoomInput {
     lastMessageContent: String!
 	telegramChatId: String = null
 	whatsappChatId: String = null
+    facebookMessengerChatId: String = null
 }
 
 input CreateChatRoomMessageInput {
@@ -576,64 +577,64 @@ enum ChannelTypeNameOutput {
 }
 
 type Mutation {
-	# Данный запрос позволяет создать сообщение в определенной чат комнате.
+	# Создать сообщение в чат комнате.
 	createChatRoomMessage(input: CreateChatRoomMessageInput): CreateChatRoomMessageOutput
 		@aws_api_key
-	# Данный запрос позволяет создать чат комнату.
+	# Создать чат комнату.
 	createChatRoom(input: CreateChatRoomInput): CreateChatRoomOutput
 		@aws_api_key
-	# Данный запрос позволяет назначить оператора ответственным за определенную чат комнату.
+	# Назначить оператора ответственным за чат комнату.
 	assignChatRoomOperator(input: AssignChatRoomOperatorInput): AssignChatRoomOperatorOutput
 		@aws_api_key
-	# Данный запрос позволяет закрыть чат комнату после завершения диалога между оператором и клиентам.
+	# Закрыть чат комнату после завершения диалога между оператором и клиентам.
 	closeChatRoom(input: CloseChatRoomInput): CloseChatRoomOutput
 		@aws_api_key
-	# Данный запрос позволяет активировать закрытую чат комнату, когда в нее пишет клиент.
+	# Активировать закрытую чат комнату, когда в неё пишет клиент.
 	activateClosedChatRoom(input: ActivateClosedChatRoomInput): ActivateClosedChatRoomOutput
 		@aws_api_key
-	# Данный запрос позволяет обновлять статус отправки сообщения в чат комнате.
+	# Обновлять статус отправки сообщения в чат комнате.
 	updateMessageSendingStatus(input: UpdateMessageSendingStatusInput): UpdateMessageSendingStatusOutput
 		@aws_api_key
-	# Данный запрос позволяет создать нового идентифицированного пользователя в системе.
+	# Создать нового идентифицированного пользователя.
 	createIdentifiedUser(input: CreateIdentifiedUserInput): CreateIdentifiedUserOutput
 		@aws_api_key
-	# Данный запрос позволяет создать нового внутреннего пользователя в системе.
+	# Создать нового внутреннего пользователя.
 	createInternalUser(input: CreateInternalUserInput): CreateInternalUserOutput
 		@aws_api_key
-	# Данный запрос позволяет создать организацию.
+	# Создать новую организацию.
 	createOrganization(input: CreateOrganizationInput): CreateOrganizationOutput
 		@aws_api_key
-	# Данный запрос позволяет создать неидентифицированного пользователя.
+	# Создать нового неидентифицированного пользователя.
 	createUnidentifiedUser(input: CreateUnidentifiedUserInput): CreateUnidentifiedUserOutput
 		@aws_api_key
-	# Данный запрос позволяет обновить информацию определенного идентифицированного пользователя системы.
+	# Обновить информацию идентифицированного пользователя.
 	updateIdentifiedUser(input: UpdateIdentifiedUserInput): UpdateIdentifiedUserOutput
 		@aws_api_key
-	# Данный запрос позволяет обновить информацию определенного внутреннего пользователя системы.
+	# Обновить информацию внутреннего пользователя.
 	updateInternalUser(input: UpdateInternalUserInput): UpdateInternalUserOutput
 		@aws_api_key
-	# Данный запрос позволяет обновить информацию определенной организации.
+	# Обновить информацию организации.
 	updateOrganization(input: UpdateOrganizationInput): UpdateOrganizationOutput
 		@aws_api_key
-	# Данный запрос позволяет обновить информацию определенного неидентифицированного пользователя.
+	# Обновить информацию неидентифицированного пользователя.
 	updateUnidentifiedUser(input: UpdateUnidentifiedUserInput): UpdateUnidentifiedUserOutput
 		@aws_api_key
-	# Данный запрос позволяет обновлять статус сообщения и количество непрочитанных сообщений в чат комнате.
+	# Обновлять статус сообщения и количество непрочитанных сообщений в чат комнате.
 	updateMessageData(input: UpdateMessageDataInput): UpdateMessageDataOutput
 		@aws_api_key
-	# Данный запрос позволяет создать виджет с определенными настройками.
+	# Создать виджет с настройками.
 	createWidget(input: CreateWidgetInput): CreateWidgetOutput
 		@aws_api_key
-	# Данный запрос позволяет переквалифицировать неидентифицированного пользователя в идентифицированного.
+	# Переквалифицировать неидентифицированного пользователя в идентифицированного.
 	requalifyClient(input: RequalifyClientInput): RequalifyClientOutput
 		@aws_api_key
-	# Данный запрос позволяет удалить один или несколько выбранных клиентов.
+	# Удалить один или несколько клиентов.
 	deleteClients(input: DeleteClientsInput): DeleteClientsOutput
 		@aws_api_key
-	# Данный запрос позволяет удалить один или несколько выбранных внутренних пользователей.
+	# Удалить один или несколько внутренних пользователей.
 	deleteInternalUsers(input: DeleteInternalUsersInput): DeleteInternalUsersOutput
 		@aws_api_key
-	# Данный запрос позволяет восстановить ранее удаленных внутренних пользователей.
+	# Восстановить ранее удаленных внутренних пользователей.
 	restoreDeletedInternalUsers(input: RestoreDeletedInternalUsersInput): RestoreDeletedInternalUsersOutput
 		@aws_api_key
 }
@@ -677,16 +678,16 @@ type OrganizationOutput @aws_api_key {
 }
 
 type Query {
-	# Данный запрос позволяет получить список сообщений определенной чат комнаты.
+	# Получить список сообщений чат комнаты.
 	getChatRoomMessages(chatRoomId: String!, fetchSize: Int! = 100, pagingState: String = null): GetChatRoomMessagesOutput
 		@aws_api_key
-	# Данный запрос позволяет получить список типов каналов и каналов, которые может обслужить определенный внутренний пользователь.
+	# Получить список типов каналов и каналов, которые может обслужить внутренний пользователь.
 	getChannelsTypesAndChannels(userId: String!): [GetChannelsTypesAndChannelsOutput]
 		@aws_api_key
-	# Данный запрос позволяет получить полную информацию определенной чат комнаты.
+	# Получить полную информацию чат комнаты.
 	getChatRoomInformation(chatRoomId: String!): GetChatRoomInformationOutput
 		@aws_api_key
-	# Данный запрос позволяет получить список непринятых в работу чат комнат.
+	# Получить список непринятых в работу чат комнат.
 	getNonAcceptedChatRooms(
 		organizationId: String!,
 		channelsIds: [String!]!,
@@ -694,7 +695,7 @@ type Query {
 		endDateTime: String
 	): [GetNonAcceptedChatRoomsOutput]
 		@aws_api_key
-	# Данный запрос позволяет получить список принятых в работу чат комнат.
+	# Получить список принятых в работу чат комнат.
 	getAcceptedChatRooms(
 		operatorId: String!,
 		channelsIds: [String!]!,
@@ -702,7 +703,7 @@ type Query {
 		endDateTime: String
 	): [GetAcceptedChatRoomsOutput]
 		@aws_api_key
-	# Данный запрос позволяет получить список завершенных диалогов (закрытых чат комнат).
+	# Получить список завершенных диалогов.
 	getCompletedChatRooms(
 		operatorId: String!,
 		channelsIds: [String!]!,
@@ -710,25 +711,25 @@ type Query {
 		endDateTime: String
 	): [GetCompletedChatRoomsOutput]
 		@aws_api_key
-	# Данный запрос позволяет получить список стран из справочника.
+	# Получить список стран из справочника.
 	getCountries: [GetCountriesOutput]
 		@aws_api_key
-	# Данный запрос позволяет получить список полов из справочника.
+	# Получить список полов из справочника.
 	getGenders: [GetGendersOutput]
 		@aws_api_key
-	# Данный запрос позволяет получить информацию определенного внутреннего пользователя системы.
+	# Получить данные о внутреннем пользователе.
 	getInternalUser(auth0UserId: String!): GetInternalUserOutput
 		@aws_api_key
-	# Данный запрос позволяет получить список внутренних пользователей определенной организации.
+	# Получить список внутренних пользователей определенной организации.
 	getInternalUsers(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): GetInternalUsersOutput
 		@aws_api_key
-	# Данный запрос позволяет получить список доступных ролей в системе.
+	# Получить список доступных ролей в системе.
 	getRoles: [GetRolesOutput]
 		@aws_api_key
-	# Данный запрос позволяет получить информацию по определенному клиенту.
+	# Получить данные о клиенте.
 	getClient(userId: String!): GetClientOutput
 		@aws_api_key
-	# Данный запрос позволяет получить список онлайн операторов, которые могут обслужить определенный канал.
+	# Получить список онлайн операторов, которые могут обслужить канал.
 	getChannelOnlineOperators(
 		channelTechnicalId: String!,
 		channelTypeName: ChannelTypeNameOutput!,
@@ -736,7 +737,7 @@ type Query {
 		recordsNumber: Int!
 	): [GetChannelOnlineOperatorsOutput]
 		@aws_api_key
-	# Данный запрос позволяет получить список чат комнат в рамках канала определенного клиента.
+	# Получить список чат комнат в рамках канала определенного клиента.
 	getClientChatRooms(
 		channelTechnicalId: String!,
 		channelTypeName: ChannelTypeNameOutput!,
@@ -745,10 +746,10 @@ type Query {
 		recordsNumber: Int!
 	): [GetClientChatRoomsOutput]
 		@aws_api_key
-	# Данный запрос позволяет получить список клиентов определенной организации.
+	# Получить список клиентов определенной организации.
 	getClients(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): GetClientsOutput
 		@aws_api_key
-	# Данный запрос позволяет получить список удаленных внутренних пользователей.
+	# Получить список удаленных внутренних пользователей.
     getDeletedInternalUsers(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): GetDeletedInternalUsersOutput
 		@aws_api_key
 }
@@ -817,51 +818,51 @@ type RoleOutput @aws_api_key {
 }
 
 type Subscription {
-	# Данная подписка позволяет следить за новым созданным сообщением по id чат комнаты.
+	# Следить за новым созданным сообщением по id чат комнаты.
 	watchCreateChatRoomMessageByChatRoomId(chatRoomId: String!): CreateChatRoomMessageOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["createChatRoomMessage"])
-	# Данная подписка позволяет следить за новым созданным сообщением по id канала.
+	# Следить за новым созданным сообщением по id канала.
 	watchCreateChatRoomMessageByChannelId(channelId: String!): CreateChatRoomMessageOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["createChatRoomMessage"])
-	# Данная подписка позволяет следить за обновлениями статуса отправки сообщение в чат комнатах по id чат комнаты.
+	# Следить за обновлениями статуса отправки сообщение в чат комнатах по id чат комнаты.
 	watchUpdateMessageSendingStatusByChatRoomId(chatRoomId: String!): UpdateMessageSendingStatusOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["updateMessageSendingStatus"])
-	# Данная подписка позволяет следить за обновлениями статуса отправки сообщение в чат комнатах по id канала.
+	# Следить за обновлениями статуса отправки сообщение в чат комнатах по id канала.
 	watchUpdateMessageSendingStatusByChannelId(channelId: String!): UpdateMessageSendingStatusOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["updateMessageSendingStatus"])
-	# Данная подписка позволяет следить за созданными и не принятыми в работу чат комнатами.
+	# Следить за созданными и не принятыми в работу чат комнатами.
 	watchCreateChatRoom(channelId: String!): CreateChatRoomOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["createChatRoom"])
-	# Данная подписка позволяет следить за назначением оператора в определенную чат комнатами по id чат комнаты.
+	# Следить за назначением оператора в определенную чат комнатами по id чат комнаты.
 	watchAssignChatRoomOperatorByChatRoomId(chatRoomId: String!): AssignChatRoomOperatorOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["assignChatRoomOperator"])
-	# Данная подписка позволяет следить за назначением оператора в определенную чат комнатами по id канала.
+	# Следить за назначением оператора в определенную чат комнатами по id канала.
 	watchAssignChatRoomOperatorByChannelId(channelId: String!): AssignChatRoomOperatorOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["assignChatRoomOperator"])
-	# Данная подписка позволяет следить за закрытием чат комнаты после завершения диалога по id чат комнаты.
+	# Следить за закрытием чат комнаты после завершения диалога по id чат комнаты.
 	watchCloseChatRoomByChatRoomId(chatRoomId: String!): CloseChatRoomOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["closeChatRoom"])
-	# Данная подписка позволяет следить за закрытием чат комнаты после завершения диалога по id канала.
+	# Следить за закрытием чат комнаты после завершения диалога по id канала.
 	watchCloseChatRoomByChannelId(channelId: String!): CloseChatRoomOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["closeChatRoom"])
-	# Данная подписка позволяет получить информацию о чат комнате, которую активизировали.
+	# Получить информацию о чат комнате, которую активизировали.
 	watchActivateClosedChatRoom(channelId: String!): ActivateClosedChatRoomOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["activateClosedChatRoom"])
-	# Данная подписка позволяет получить информацию об обновленном статусе сообщений из определенной чат комнаты по id чат комнаты.
+	# Получить информацию об обновленном статусе сообщений из определенной чат комнаты по id чат комнаты.
 	watchUpdateMessageDataByChatRoomId(chatRoomId: String!): UpdateMessageDataOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["updateMessageData"])
-	# Данная подписка позволяет получить информацию об обновленном статусе сообщений из определенной чат комнаты по id канала.
+	# Получить информацию об обновленном статусе сообщений из определенной чат комнаты по id канала.
 	watchUpdateMessageDataByChannelId(channelId: String!): UpdateMessageDataOutput
 		@aws_api_key
 @aws_subscribe(mutations: ["updateMessageData"])
