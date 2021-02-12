@@ -79,9 +79,8 @@ type ChatRoomMessage @aws_api_key {
 	messageId: String
 	messageAuthorId: String
 	messageChannelId: String
-	messageType: String
 	messageText: String
-	messageContentUrl: String
+	messageContent: String
 	quotedMessage: QuotedMessageOutput
 }
 
@@ -181,9 +180,8 @@ input CreateChatRoomMessageInput {
 	chatRoomId: String!
 	messageAuthorId: String!
 	messageChannelId: String!
-	messageType: String!
 	messageText: String
-	messageContentUrl: String
+	messageContent: String
 	quotedMessage: QuotedMessageInput
 	localMessageId: String = null
 	isClient: Boolean!
@@ -203,9 +201,8 @@ type CreateChatRoomMessageOutput @aws_api_key {
 	messageId: String
 	messageAuthorId: String
 	messageChannelId: String
-	messageType: String
 	messageText: String
-	messageContentUrl: String
+	messageContent: String
 	quotedMessage: QuotedMessageOutput
 	localMessageId: String
 }
@@ -461,22 +458,6 @@ type GetCompletedChatRoomsOutput @aws_api_key {
 	client: ClientOutput
 }
 
-type GetCountriesOutput @aws_api_key {
-	countryId: String
-	countryShortName: String
-	countryOfficialName: String
-	countryAlpha2Code: String
-	countryAlpha3Code: String
-	countryNumericCode: String
-	countryCodeTopLevelDomain: String
-}
-
-type GetGendersOutput @aws_api_key {
-	genderId: String
-	genderTechnicalName: String
-	genderPublicName: String
-}
-
 type GetInternalUserOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
@@ -711,12 +692,6 @@ type Query {
 		endDateTime: String
 	): [GetCompletedChatRoomsOutput]
 		@aws_api_key
-	# Получить список стран из справочника.
-	getCountries: [GetCountriesOutput]
-		@aws_api_key
-	# Получить список полов из справочника.
-	getGenders: [GetGendersOutput]
-		@aws_api_key
 	# Получить данные о внутреннем пользователе.
 	getInternalUser(auth0UserId: String!): GetInternalUserOutput
 		@aws_api_key
@@ -758,18 +733,16 @@ input QuotedMessageInput {
 	messageId: String
 	messageAuthorId: String
 	messageChannelId: String
-	messageType: String
 	messageText: String
-	messageContentUrl: String
+	messageContent: String
 }
 
 type QuotedMessageOutput @aws_api_key {
 	messageId: String
 	messageAuthorId: String
 	messageChannelId: String
-	messageType: String
 	messageText: String
-	messageContentUrl: String
+	messageContent: String
 }
 
 input RequalifyClientInput {
