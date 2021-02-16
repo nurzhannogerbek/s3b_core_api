@@ -57,9 +57,9 @@ type ChatRoomClientOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	gender: GenderOutput
 	metadata: String
@@ -92,9 +92,9 @@ type ChatRoomOperatorsOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
@@ -109,9 +109,9 @@ type ClientOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	gender: GenderOutput
 	metadata: String
@@ -127,9 +127,9 @@ type ClientsOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	userType: String
 	metadata: String
@@ -211,9 +211,9 @@ input CreateIdentifiedUserInput {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	genderId: String
 	metadata: String!
@@ -228,9 +228,9 @@ type CreateIdentifiedUserOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	gender: GenderOutput
 	metadata: String
@@ -246,9 +246,9 @@ input CreateInternalUserInput {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	userPositionName: String
 	genderId: String
@@ -265,9 +265,9 @@ type CreateInternalUserOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
@@ -365,9 +365,9 @@ type GetChannelOnlineOperatorsOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
@@ -411,9 +411,9 @@ type GetClientOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String[
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	userType: String
 	metadata: String
@@ -446,9 +446,9 @@ type GetInternalUserOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
@@ -491,9 +491,9 @@ type InternalUsersOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
@@ -511,9 +511,9 @@ type DeletedInternalUsersOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
@@ -609,9 +609,9 @@ type OperatorOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
@@ -724,9 +724,9 @@ input RequalifyClientInput {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	genderId: String
 	metadata: String!
@@ -742,9 +742,9 @@ type RequalifyClientOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	userType: String
 	metadata: String
@@ -818,9 +818,9 @@ input UpdateIdentifiedUserInput {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	genderId: String
 	metadata: String!
@@ -835,9 +835,9 @@ type UpdateIdentifiedUserOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	gender: GenderOutput
 	metadata: String
@@ -853,9 +853,9 @@ input UpdateInternalUserInput {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	userPositionName: String
 	genderId: String
@@ -872,9 +872,9 @@ type UpdateInternalUserOutput @aws_api_key {
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: String
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
