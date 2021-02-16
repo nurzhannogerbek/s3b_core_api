@@ -62,7 +62,6 @@ type ChatRoomClientOutput @aws_api_key {
 	userSecondaryPhoneNumber: String
 	userProfilePhotoUrl: String
 	gender: GenderOutput
-	country: CountryOutput
 	metadata: String
 	telegramUsername: String
 	whatsappProfile: String
@@ -99,7 +98,6 @@ type ChatRoomOperatorsOutput @aws_api_key {
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
-	country: CountryOutput
 	role: RoleOutput
 	organization: OrganizationOutput
 }
@@ -116,7 +114,6 @@ type ClientOutput @aws_api_key {
 	userSecondaryPhoneNumber: String
 	userProfilePhotoUrl: String
 	gender: GenderOutput
-	country: CountryOutput
 	metadata: String
 	telegramUsername: String
 	whatsappProfile: String
@@ -140,7 +137,6 @@ type ClientsOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
 	gender: GenderOutput
-	country: CountryOutput
 }
 
 input CloseChatRoomInput {
@@ -154,16 +150,6 @@ type CloseChatRoomOutput @aws_api_key {
 	channelId: String
 	chatRoomStatus: String
 	operator: OperatorOutput
-}
-
-type CountryOutput @aws_api_key {
-	countryId: String
-	countryShortName: String
-	countryOfficialName: String
-	countryAlpha2Code: String
-	countryAlpha3Code: String
-	countryNumericCode: String
-	countryCodeTopLevelDomain: String
 }
 
 input CreateChatRoomInput {
@@ -230,7 +216,6 @@ input CreateIdentifiedUserInput {
 	userSecondaryPhoneNumber: String
 	userProfilePhotoUrl: String
 	genderId: String
-	countryId: String
 	metadata: String!
 	telegramUsername: String
 	whatsappProfile: String
@@ -248,7 +233,6 @@ type CreateIdentifiedUserOutput @aws_api_key {
 	userSecondaryPhoneNumber: String
 	userProfilePhotoUrl: String
 	gender: GenderOutput
-	country: CountryOutput
 	metadata: String
 	telegramUsername: String
 	whatsappProfile: String
@@ -268,7 +252,6 @@ input CreateInternalUserInput {
 	userProfilePhotoUrl: String
 	userPositionName: String
 	genderId: String
-	countryId: String
 	roleId: String
 	organizationId: String
 	password: String
@@ -288,7 +271,6 @@ type CreateInternalUserOutput @aws_api_key {
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
-	country: CountryOutput
 	role: RoleOutput
 	organization: OrganizationOutput
 }
@@ -389,7 +371,6 @@ type GetChannelOnlineOperatorsOutput @aws_api_key {
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
-	country: CountryOutput
 	role: RoleOutput
 	organization: OrganizationOutput
 }
@@ -440,7 +421,6 @@ type GetClientOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
 	gender: GenderOutput
-	country: CountryOutput
 }
 
 type GetClientsOutput @aws_api_key {
@@ -472,7 +452,6 @@ type GetInternalUserOutput @aws_api_key {
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
-	country: CountryOutput
 	role: RoleOutput
 	organization: OrganizationOutput
 }
@@ -518,7 +497,6 @@ type InternalUsersOutput @aws_api_key {
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
-	country: CountryOutput
 	role: RoleOutput
 	organization: OrganizationOutput
 }
@@ -539,7 +517,6 @@ type DeletedInternalUsersOutput @aws_api_key {
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
-	country: CountryOutput
 	role: RoleOutput
 	organization: OrganizationOutput
 }
@@ -641,7 +618,6 @@ type OperatorOutput @aws_api_key {
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
-	country: CountryOutput
 	role: RoleOutput
 	organization: OrganizationOutput
 }
@@ -756,7 +732,6 @@ input RequalifyClientInput {
 	userSecondaryPhoneNumber: String
 	userProfilePhotoUrl: String
 	genderId: String
-	countryId: String
 	metadata: String!
 	telegramUsername: String
 	whatsappProfile: String
@@ -780,7 +755,6 @@ type RequalifyClientOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
 	gender: GenderOutput
-	country: CountryOutput
 }
 
 type RoleOutput @aws_api_key {
@@ -852,7 +826,6 @@ input UpdateIdentifiedUserInput {
 	userSecondaryPhoneNumber: String
 	userProfilePhotoUrl: String
 	genderId: String
-	countryId: String
 	metadata: String!
 	telegramUsername: String
 	whatsappProfile: String
@@ -870,7 +843,6 @@ type UpdateIdentifiedUserOutput @aws_api_key {
 	userSecondaryPhoneNumber: String
 	userProfilePhotoUrl: String
 	gender: GenderOutput
-	country: CountryOutput
 	metadata: String
 	telegramUsername: String
 	whatsappProfile: String
@@ -890,7 +862,6 @@ input UpdateInternalUserInput {
 	userProfilePhotoUrl: String
 	userPositionName: String
 	genderId: String
-	countryId: String
 	roleId: String
 	organizationId: String
 	password: String
@@ -910,7 +881,6 @@ type UpdateInternalUserOutput @aws_api_key {
 	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
-	country: CountryOutput
 	role: RoleOutput
 	organization: OrganizationOutput
 }
