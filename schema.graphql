@@ -571,9 +571,6 @@ type Mutation {
 	# Обновить информацию внутреннего пользователя.
 	updateInternalUser(input: UpdateInternalUserInput): UpdateInternalUserOutput
 		@aws_api_key
-	# Обновить информацию организации.
-	updateOrganization(input: UpdateOrganizationInput): UpdateOrganizationOutput
-		@aws_api_key
 	# Обновить информацию неидентифицированного пользователя.
 	updateUnidentifiedUser(input: UpdateUnidentifiedUserInput): UpdateUnidentifiedUserOutput
 		@aws_api_key
@@ -916,30 +913,6 @@ type UpdateMessageDataOutput @aws_api_key {
     unreadMessagesNumber: Int
     channelTypeName: String
     isClient: Boolean
-}
-
-input UpdateOrganizationInput {
-	organizationId: String!
-	organizationName: String!
-	organizationDescription: String
-	parentOrganizationId: String
-	parentOrganizationName: String
-	parentOrganizationDescription: String
-	rootOrganizationId: String
-	rootOrganizationName: String
-	rootOrganizationDescription: String
-}
-
-type UpdateOrganizationOutput @aws_api_key {
-	organizationId: String
-	organizationName: String
-	organizationDescription: String
-	parentOrganizationId: String
-	parentOrganizationName: String
-	parentOrganizationDescription: String
-	rootOrganizationId: String
-	rootOrganizationName: String
-	rootOrganizationDescription: String
 }
 
 input UpdateUnidentifiedUserInput {
