@@ -35,27 +35,27 @@ deploy:
               [
                 {
                   'ParameterKey': 'EnvironmentName',
-                  'ParameterValue': '${ENVIRONMENT_NAME}'
+                  'ParameterValue': ${ENVIRONMENT_NAME}
                 },
                 {
                   'ParameterKey': 'S3Bucket',
-                  'ParameterValue': '${S3_BUCKET}'
+                  'ParameterValue': ${S3_BUCKET}
                 },
                 {
                   'ParameterKey': 'Auth0Domain',
-                  'ParameterValue': '${AUTH0_DOMAIN}'
+                  'ParameterValue': ${AUTH0_DOMAIN}
                 },
                 {
                   'ParameterKey': 'Auth0ClientID',
-                  'ParameterValue': '${AUTH0_CLIENT_ID}'
+                  'ParameterValue': ${AUTH0_CLIENT_ID}
                 },
                 {
                   'ParameterKey': 'GraphQLSchemaFileName',
-                  'ParameterValue': '${GRAPHQL_SCHEMA_FILE_NAME}'
+                  'ParameterValue': ${GRAPHQL_SCHEMA_FILE_NAME}
                 },
                 {
                   'ParameterKey": 'ApiKeyExpires',
-                  'ParameterValue": '${API_KEY_EXPIRES}'
+                  'ParameterValue": ${API_KEY_EXPIRES}
                 }
               ]
             WAIT: 'true'
