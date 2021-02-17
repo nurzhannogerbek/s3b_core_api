@@ -53,6 +53,8 @@ type ChatRoomClientOutput @aws_api_key {
 	chatRoomMemberSinceDateTime: String
 	userType: String
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -60,7 +62,6 @@ type ChatRoomClientOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	gender: GenderOutput
 	metadata: String
 	telegramUsername: String
@@ -88,6 +89,8 @@ type ChatRoomOperatorsOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -95,7 +98,6 @@ type ChatRoomOperatorsOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
 	role: RoleOutput
@@ -105,6 +107,8 @@ type ChatRoomOperatorsOutput @aws_api_key {
 type ClientOutput @aws_api_key {
     userType: String
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -112,7 +116,6 @@ type ClientOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	gender: GenderOutput
 	metadata: String
 	telegramUsername: String
@@ -123,6 +126,8 @@ type ClientOutput @aws_api_key {
 type ClientsOutput @aws_api_key {
 	createdDateTime: String
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -130,7 +135,6 @@ type ClientsOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	userType: String
 	metadata: String
 	telegramUsername: String
@@ -207,6 +211,7 @@ type CreateChatRoomOutput @aws_api_key {
 }
 
 input CreateIdentifiedUserInput {
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -214,7 +219,6 @@ input CreateIdentifiedUserInput {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	genderId: String
 	metadata: String!
 	telegramUsername: String
@@ -224,6 +228,8 @@ input CreateIdentifiedUserInput {
 
 type CreateIdentifiedUserOutput @aws_api_key {
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -231,7 +237,6 @@ type CreateIdentifiedUserOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	gender: GenderOutput
 	metadata: String
 	telegramUsername: String
@@ -242,25 +247,27 @@ type CreateIdentifiedUserOutput @aws_api_key {
 input CreateInternalUserInput {
 	auth0UserId: String
 	auth0Metadata: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
-	userPrimaryEmail: String
+	userPrimaryEmail: String!
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	userPositionName: String
 	genderId: String
 	roleId: String
 	organizationId: String
-	password: String
+	password: String!
 }
 
 type CreateInternalUserOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -268,7 +275,6 @@ type CreateInternalUserOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
 	role: RoleOutput
@@ -304,6 +310,8 @@ input CreateUnidentifiedUserInput {
 
 type CreateUnidentifiedUserOutput @aws_api_key {
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	metadata: String
 }
 
@@ -361,6 +369,8 @@ type GetChannelOnlineOperatorsOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -368,7 +378,6 @@ type GetChannelOnlineOperatorsOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
 	role: RoleOutput
@@ -407,6 +416,8 @@ type GetClientChatRoomsOutput @aws_api_key {
 type GetClientOutput @aws_api_key {
 	createdDateTime: String
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -414,7 +425,6 @@ type GetClientOutput @aws_api_key {
 	userSecondaryEmail: [String[
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	userType: String
 	metadata: String
 	telegramUsername: String
@@ -442,6 +452,8 @@ type GetInternalUserOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -449,7 +461,6 @@ type GetInternalUserOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
 	role: RoleOutput
@@ -487,6 +498,8 @@ type InternalUsersOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -494,7 +507,6 @@ type InternalUsersOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
 	role: RoleOutput
@@ -507,6 +519,8 @@ type DeletedInternalUsersOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -514,7 +528,6 @@ type DeletedInternalUsersOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
 	role: RoleOutput
@@ -605,6 +618,8 @@ type OperatorOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -612,7 +627,6 @@ type OperatorOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
 	role: RoleOutput
@@ -720,6 +734,7 @@ type QuotedMessageOutput @aws_api_key {
 
 input RequalifyClientInput {
 	userId: String!
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -727,7 +742,6 @@ input RequalifyClientInput {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	genderId: String
 	metadata: String!
 	telegramUsername: String
@@ -738,6 +752,8 @@ input RequalifyClientInput {
 type RequalifyClientOutput @aws_api_key {
 	createdDateTime: String
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -745,7 +761,6 @@ type RequalifyClientOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	userType: String
 	metadata: String
 	telegramUsername: String
@@ -814,6 +829,7 @@ type Subscription {
 
 input UpdateIdentifiedUserInput {
 	userId: String!
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -821,7 +837,6 @@ input UpdateIdentifiedUserInput {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	genderId: String
 	metadata: String!
 	telegramUsername: String
@@ -831,6 +846,8 @@ input UpdateIdentifiedUserInput {
 
 type UpdateIdentifiedUserOutput @aws_api_key {
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -838,7 +855,6 @@ type UpdateIdentifiedUserOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	gender: GenderOutput
 	metadata: String
 	telegramUsername: String
@@ -849,14 +865,14 @@ type UpdateIdentifiedUserOutput @aws_api_key {
 input UpdateInternalUserInput {
 	auth0UserId: String!
 	auth0Metadata: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
-	userPrimaryEmail: String
+	userPrimaryEmail: String!
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	userPositionName: String
 	genderId: String
 	roleId: String
@@ -868,6 +884,8 @@ type UpdateInternalUserOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
+    userNickname: String
+    userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -875,7 +893,6 @@ type UpdateInternalUserOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userProfilePhotoUrl: String
 	userPositionName: String
 	gender: GenderOutput
 	role: RoleOutput
@@ -917,12 +934,16 @@ type UpdateMessageDataOutput @aws_api_key {
 
 input UpdateUnidentifiedUserInput {
 	userId: String!
+	userNickname: String
+    userProfilePhotoUrl: String
 	metadata: String!
 }
 
 type UpdateUnidentifiedUserOutput @aws_api_key {
 	userId: String
-	metadata: String!
+	userNickname: String
+    userProfilePhotoUrl: String
+	metadata: String
 }
 
 schema {
