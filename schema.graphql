@@ -1,7 +1,7 @@
 input ActivateClosedChatRoomInput {
 	chatRoomId: String!
 	clientId: String!
-    lastMessageContent: String!
+	lastMessageContent: String!
 }
 
 type ActivateClosedChatRoomOutput @aws_api_key {
@@ -43,6 +43,13 @@ type ChannelOutput @aws_api_key {
 	channelType: ChannelTypeOutput
 }
 
+enum ChannelTypeNameOutput {
+	widget
+	dashboard
+	telegram
+	whatsapp
+}
+
 type ChannelTypeOutput @aws_api_key {
 	channelTypeId: String
 	channelTypeName: String
@@ -53,8 +60,8 @@ type ChatRoomClientOutput @aws_api_key {
 	chatRoomMemberSinceDateTime: String
 	userType: String
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -89,8 +96,8 @@ type ChatRoomOperatorsOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -105,10 +112,10 @@ type ChatRoomOperatorsOutput @aws_api_key {
 }
 
 type ClientOutput @aws_api_key {
-    userType: String
+	userType: String
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -126,8 +133,8 @@ type ClientOutput @aws_api_key {
 type ClientsOutput @aws_api_key {
 	createdDateTime: String
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -160,10 +167,10 @@ input CreateChatRoomInput {
 	channelTechnicalId: String!
 	channelTypeName: String!
 	clientId: String!
-    lastMessageContent: String!
-	telegramChatId: String = null
-	whatsappChatId: String = null
-    facebookMessengerChatId: String = null
+	lastMessageContent: String!
+	telegramChatId: String
+	whatsappChatId: String
+	facebookMessengerChatId: String
 }
 
 input CreateChatRoomMessageInput {
@@ -173,7 +180,7 @@ input CreateChatRoomMessageInput {
 	messageText: String
 	messageContent: String
 	quotedMessage: QuotedMessageInput
-	localMessageId: String = null
+	localMessageId: String
 	isClient: Boolean!
 }
 
@@ -181,7 +188,7 @@ type CreateChatRoomMessageOutput @aws_api_key {
 	channelId: String
 	channelTypeName: String
 	chatRoomId: String
-    chatRoomStatus: String
+	chatRoomStatus: String
 	messageCreatedDateTime: String
 	messageUpdatedDateTime: String
 	messageDeletedDateTime: String
@@ -211,7 +218,7 @@ type CreateChatRoomOutput @aws_api_key {
 }
 
 input CreateIdentifiedUserInput {
-    userProfilePhotoUrl: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -228,8 +235,8 @@ input CreateIdentifiedUserInput {
 
 type CreateIdentifiedUserOutput @aws_api_key {
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -266,8 +273,8 @@ type CreateInternalUserOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -310,8 +317,8 @@ input CreateUnidentifiedUserInput {
 
 type CreateUnidentifiedUserOutput @aws_api_key {
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	metadata: String
 }
 
@@ -341,12 +348,25 @@ type DeleteInternalUsersOutput @aws_api_key {
 	usersIds: [String]
 }
 
-input RestoreDeletedInternalUsersInput {
-	usersIds: [String!]!
-}
-
-type RestoreDeletedInternalUsersOutput @aws_api_key {
-	usersIds: [String]
+type DeletedInternalUsersOutput @aws_api_key {
+	createdDateTime: String
+	deletedDateTime: String
+	auth0UserId: String
+	auth0Metadata: String
+	userId: String
+	userNickname: String
+	userProfilePhotoUrl: String
+	userFirstName: String
+	userLastName: String
+	userMiddleName: String
+	userPrimaryEmail: String
+	userSecondaryEmail: [String]
+	userPrimaryPhoneNumber: String
+	userSecondaryPhoneNumber: [String]
+	userPositionName: String
+	gender: GenderOutput
+	role: RoleOutput
+	organization: OrganizationOutput
 }
 
 type GenderOutput @aws_api_key {
@@ -369,8 +389,8 @@ type GetChannelOnlineOperatorsOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -416,13 +436,13 @@ type GetClientChatRoomsOutput @aws_api_key {
 type GetClientOutput @aws_api_key {
 	createdDateTime: String
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
 	userPrimaryEmail: String
-	userSecondaryEmail: [String[
+	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
 	userType: String
@@ -448,12 +468,17 @@ type GetCompletedChatRoomsOutput @aws_api_key {
 	client: ClientOutput
 }
 
+type GetDeletedInternalUsersOutput @aws_api_key {
+	totalNumberOfUsers: Int
+	internalUsers: [DeletedInternalUsersOutput]
+}
+
 type GetInternalUserOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -472,16 +497,11 @@ type GetInternalUsersOutput @aws_api_key {
 	internalUsers: [InternalUsersOutput]
 }
 
-type GetDeletedInternalUsersOutput @aws_api_key {
-	totalNumberOfUsers: Int
-	internalUsers: [DeletedInternalUsersOutput]
-}
-
 type GetNonAcceptedChatRoomsOutput @aws_api_key {
 	chatRoomId: String
 	lastMessageContent: String
 	lastMessageDateTime: String
-    lastMessageFromClientDateTime: String
+	lastMessageFromClientDateTime: String
 	unreadMessagesNumber: Int
 	channel: ChannelOutput
 	client: ClientOutput
@@ -498,29 +518,8 @@ type InternalUsersOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
-	userFirstName: String
-	userLastName: String
-	userMiddleName: String
-	userPrimaryEmail: String
-	userSecondaryEmail: [String]
-	userPrimaryPhoneNumber: String
-	userSecondaryPhoneNumber: [String]
-	userPositionName: String
-	gender: GenderOutput
-	role: RoleOutput
-	organization: OrganizationOutput
-}
-
-type DeletedInternalUsersOutput @aws_api_key {
-    createdDateTime: String
-    deletedDateTime: String
-	auth0UserId: String
-	auth0Metadata: String
-	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -538,13 +537,6 @@ enum MessageStatusOutput {
 	MESSAGE_IS_SENT
 	MESSAGE_IS_DELIVERED
 	MESSAGE_IS_READ
-}
-
-enum ChannelTypeNameOutput {
-    widget
-    dashboard
-    telegram
-    whatsapp
 }
 
 type Mutation {
@@ -618,8 +610,8 @@ type OperatorOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -647,7 +639,7 @@ type OrganizationOutput @aws_api_key {
 
 type Query {
 	# Получить список сообщений чат комнаты.
-	getChatRoomMessages(chatRoomId: String!, fetchSize: Int! = 100, pagingState: String = null): GetChatRoomMessagesOutput
+	getChatRoomMessages(chatRoomId: String!, fetchSize: Int! = 100, pagingState: String): GetChatRoomMessagesOutput
 		@aws_api_key
 	# Получить список типов каналов и каналов, которые может обслужить внутренний пользователь.
 	getChannelsTypesAndChannels(userId: String!): [GetChannelsTypesAndChannelsOutput]
@@ -712,7 +704,7 @@ type Query {
 	getClients(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): GetClientsOutput
 		@aws_api_key
 	# Получить список удаленных внутренних пользователей.
-    getDeletedInternalUsers(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): GetDeletedInternalUsersOutput
+	getDeletedInternalUsers(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): GetDeletedInternalUsersOutput
 		@aws_api_key
 }
 
@@ -752,8 +744,8 @@ input RequalifyClientInput {
 type RequalifyClientOutput @aws_api_key {
 	createdDateTime: String
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -767,6 +759,14 @@ type RequalifyClientOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
 	gender: GenderOutput
+}
+
+input RestoreDeletedInternalUsersInput {
+	usersIds: [String!]!
+}
+
+type RestoreDeletedInternalUsersOutput @aws_api_key {
+	usersIds: [String]
 }
 
 type RoleOutput @aws_api_key {
@@ -846,8 +846,8 @@ input UpdateIdentifiedUserInput {
 
 type UpdateIdentifiedUserOutput @aws_api_key {
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -884,8 +884,8 @@ type UpdateInternalUserOutput @aws_api_key {
 	auth0UserId: String
 	auth0Metadata: String
 	userId: String
-    userNickname: String
-    userProfilePhotoUrl: String
+	userNickname: String
+	userProfilePhotoUrl: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -897,6 +897,23 @@ type UpdateInternalUserOutput @aws_api_key {
 	gender: GenderOutput
 	role: RoleOutput
 	organization: OrganizationOutput
+}
+
+input UpdateMessageDataInput {
+	chatRoomId: String!
+	messagesIds: [String!]!
+	messageStatus: MessageStatusOutput!
+	isClient: Boolean!
+}
+
+type UpdateMessageDataOutput @aws_api_key {
+	chatRoomId: String
+	channelId: String
+	chatRoomStatus: String
+	chatRoomMessages: [ChatRoomMessage]
+	unreadMessagesNumber: Int
+	channelTypeName: String
+	isClient: Boolean
 }
 
 input UpdateMessageSendingStatusInput {
@@ -915,34 +932,17 @@ type UpdateMessageSendingStatusOutput @aws_api_key {
 	messageText: String
 }
 
-input UpdateMessageDataInput {
-	chatRoomId: String!
-	messagesIds: [String!]!
-	messageStatus: MessageStatusOutput!
-	isClient: Boolean!
-}
-
-type UpdateMessageDataOutput @aws_api_key {
-	chatRoomId: String
-	channelId: String
-	chatRoomStatus: String
-	chatRoomMessages: [ChatRoomMessage]
-    unreadMessagesNumber: Int
-    channelTypeName: String
-    isClient: Boolean
-}
-
 input UpdateUnidentifiedUserInput {
 	userId: String!
 	userNickname: String
-    userProfilePhotoUrl: String
+	userProfilePhotoUrl: String
 	metadata: String!
 }
 
 type UpdateUnidentifiedUserOutput @aws_api_key {
 	userId: String
 	userNickname: String
-    userProfilePhotoUrl: String
+	userProfilePhotoUrl: String
 	metadata: String
 }
 
