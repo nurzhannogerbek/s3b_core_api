@@ -603,21 +603,14 @@ type OrganizationOutput @aws_api_key {
 	organizationId: String
 	organizationName: String
 	organizationLevel: Int
-	treeOrganizationId: String
-	treeOrganizationName: String
-	treeOrganizationLevel: String
 	parentOrganizationId: String
 	parentOrganizationName: String
 	parentOrganizationLevel: Int
-	treeParentOrganizationId: String
-	treeParentOrganizationName: String
-	treeParentOrganizationLevel: String
 	rootOrganizationId: String
 	rootOrganizationName: String
 	rootOrganizationLevel: Int
-	treeRootOrganizationId: String
-	treeRootOrganizationName: String
-	treeRootOrganizationLevel: String
+	treeOrganizationId: String
+	treeOrganizationName: String
 }
 
 type Query {
