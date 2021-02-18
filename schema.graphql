@@ -288,29 +288,6 @@ type CreateInternalUserOutput @aws_api_key {
 	organization: OrganizationOutput
 }
 
-input CreateOrganizationInput {
-	organizationName: String!
-	organizationDescription: String
-	parentOrganizationId: String
-	parentOrganizationName: String
-	parentOrganizationDescription: String
-	rootOrganizationId: String
-	rootOrganizationName: String
-	rootOrganizationDescription: String
-}
-
-type CreateOrganizationOutput @aws_api_key {
-	organizationId: String
-	organizationName: String
-	organizationDescription: String
-	parentOrganizationId: String
-	parentOrganizationName: String
-	parentOrganizationDescription: String
-	rootOrganizationId: String
-	rootOrganizationName: String
-	rootOrganizationDescription: String
-}
-
 input CreateUnidentifiedUserInput {
 	metadata: String!
 }
@@ -564,9 +541,6 @@ type Mutation {
 	# Создать нового внутреннего пользователя.
 	createInternalUser(input: CreateInternalUserInput): CreateInternalUserOutput
 		@aws_api_key
-	# Создать новую организацию.
-	createOrganization(input: CreateOrganizationInput): CreateOrganizationOutput
-		@aws_api_key
 	# Создать нового неидентифицированного пользователя.
 	createUnidentifiedUser(input: CreateUnidentifiedUserInput): CreateUnidentifiedUserOutput
 		@aws_api_key
@@ -628,13 +602,22 @@ type OperatorOutput @aws_api_key {
 type OrganizationOutput @aws_api_key {
 	organizationId: String
 	organizationName: String
-	organizationDescription: String
+	organizationLevel: Int
+	treeOrganizationId: String
+	treeOrganizationName: String
+	treeOrganizationLevel: String
 	parentOrganizationId: String
 	parentOrganizationName: String
-	parentOrganizationDescription: String
+	parentOrganizationLevel: Int
+	treeParentOrganizationId: String
+	treeParentOrganizationName: String
+	treeParentOrganizationLevel: String
 	rootOrganizationId: String
 	rootOrganizationName: String
-	rootOrganizationDescription: String
+	rootOrganizationLevel: Int
+	treeRootOrganizationId: String
+	treeRootOrganizationName: String
+	treeRootOrganizationLevel: String
 }
 
 type Query {

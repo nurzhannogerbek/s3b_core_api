@@ -445,51 +445,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': CreateInternalUserDataSource.Name
-  CreateOrganizationRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: CreateOrganizationFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateOrganizationARN
-  CreateOrganizationDataSource:
-    Type: 'AWS::AppSync::DataSource'
-    Properties:
-      ApiId:
-        'Fn::GetAtt': GraphQLApi.ApiId
-      Name:
-        'Fn::Sub': '${EnvironmentName}CreateOrganization'
-      Type: AWS_LAMBDA
-      LambdaConfig:
-        LambdaFunctionArn:
-          'Fn::ImportValue':
-            'Fn::Sub': >-
-              ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateOrganizationARN
-      ServiceRoleArn:
-        'Fn::GetAtt': CreateOrganizationRole.Arn
-  CreateOrganizationResolver:
-    Type: 'AWS::AppSync::Resolver'
-    Properties:
-      ApiId:
-        'Fn::GetAtt': GraphQLApi.ApiId
-      FieldName: createOrganization
-      TypeName: Mutation
-      DataSourceName:
-        'Fn::GetAtt': CreateOrganizationDataSource.Name
   CreateUnidentifiedUserRole:
     Type: 'AWS::IAM::Role'
     Properties:
