@@ -452,8 +452,8 @@ type GetCompletedChatRoomsOutput @aws_api_key {
 }
 
 type GetDeletedInternalUsersOutput @aws_api_key {
-	totalNumberOfUsers: Int
 	internalUsers: [DeletedInternalUsersOutput]
+	pageInformation: PageInformation!
 }
 
 type GetInternalUserOutput @aws_api_key {
