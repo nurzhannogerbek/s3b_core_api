@@ -131,10 +131,11 @@ type ClientOutput @aws_api_key {
 }
 
 type ClientsOutput @aws_api_key {
-	createdDateTime: String
 	userId: String
 	userNickname: String
 	userProfilePhotoUrl: String
+	userType: String
+	createdDateTime: String
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
@@ -142,7 +143,6 @@ type ClientsOutput @aws_api_key {
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
-	userType: String
 	metadata: String
 	telegramUsername: String
 	whatsappProfile: String
@@ -431,8 +431,14 @@ type GetClientOutput @aws_api_key {
 }
 
 type GetClientsOutput @aws_api_key {
-	totalNumberOfUsers: Int
 	clients: [ClientsOutput]
+	pageInformation: PageInformation!
+}
+
+type PageInformation @aws_api_key {
+    currentPageNumber: Int!
+    itemsCountPerPage: Int!
+    totalItemsCount: Int!
 }
 
 type GetCompletedChatRoomsOutput @aws_api_key {
@@ -470,8 +476,8 @@ type GetInternalUserOutput @aws_api_key {
 }
 
 type GetInternalUsersOutput @aws_api_key {
-	totalNumberOfUsers: Int
 	internalUsers: [InternalUsersOutput]
+	pageInformation: PageInformation!
 }
 
 type GetNonAcceptedChatRoomsOutput @aws_api_key {
@@ -651,7 +657,7 @@ type Query {
 	getInternalUser(auth0UserId: String!): GetInternalUserOutput
 		@aws_api_key
 	# Получить список внутренних пользователей определенной организации.
-	getInternalUsers(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): GetInternalUsersOutput
+	getInternalUsers(rootOrganizationId: String!, currentPageNumber: Int!, itemsCountPerPage: Int!): GetInternalUsersOutput
 		@aws_api_key
 	# Получить список доступных ролей в системе.
 	getRoles: [GetRolesOutput]
@@ -677,7 +683,7 @@ type Query {
 	): [GetClientChatRoomsOutput]
 		@aws_api_key
 	# Получить список клиентов определенной организации.
-	getClients(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): GetClientsOutput
+	getClients(rootOrganizationId: String!, currentPageNumber: Int!, itemsCountPerPage: Int!): GetClientsOutput
 		@aws_api_key
 	# Получить список удаленных внутренних пользователей.
 	getDeletedInternalUsers(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): GetDeletedInternalUsersOutput
