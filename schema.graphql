@@ -820,7 +820,7 @@ input UpdateIdentifiedUserInput {
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
 	genderId: String
-	metadata: String!
+	metadata: String
 	telegramUsername: String
 	whatsappProfile: String
 	whatsappUsername: String
