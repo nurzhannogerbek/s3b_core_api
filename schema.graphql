@@ -916,8 +916,6 @@ type UpdateMessageSendingStatusOutput @aws_api_key {
 
 input UpdateUnidentifiedUserInput {
 	userId: String!
-	userNickname: String
-	userProfilePhotoUrl: String
 	metadata: String!
 }
 
