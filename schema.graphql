@@ -686,7 +686,7 @@ type Query {
 	getClients(rootOrganizationId: String!, currentPageNumber: Int!, itemsCountPerPage: Int!): GetClientsOutput
 		@aws_api_key
 	# Получить список удаленных внутренних пользователей.
-	getDeletedInternalUsers(rootOrganizationId: String!, currentPageNumber: Int!, recordsNumber: Int!): GetDeletedInternalUsersOutput
+	getDeletedInternalUsers(rootOrganizationId: String!, currentPageNumber: Int!, itemsCountPerPage: Int!): GetDeletedInternalUsersOutput
 		@aws_api_key
 }
 
@@ -851,7 +851,7 @@ input UpdateInternalUserInput {
 	userFirstName: String
 	userLastName: String
 	userMiddleName: String
-	userPrimaryEmail: String!
+	userPrimaryEmail: String
 	userSecondaryEmail: [String]
 	userPrimaryPhoneNumber: String
 	userSecondaryPhoneNumber: [String]
