@@ -445,51 +445,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': CreateInternalUserDataSource.Name
-  CreateOrganizationRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: CreateOrganizationFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateOrganizationARN
-  CreateOrganizationDataSource:
-    Type: 'AWS::AppSync::DataSource'
-    Properties:
-      ApiId:
-        'Fn::GetAtt': GraphQLApi.ApiId
-      Name:
-        'Fn::Sub': '${EnvironmentName}CreateOrganization'
-      Type: AWS_LAMBDA
-      LambdaConfig:
-        LambdaFunctionArn:
-          'Fn::ImportValue':
-            'Fn::Sub': >-
-              ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateOrganizationARN
-      ServiceRoleArn:
-        'Fn::GetAtt': CreateOrganizationRole.Arn
-  CreateOrganizationResolver:
-    Type: 'AWS::AppSync::Resolver'
-    Properties:
-      ApiId:
-        'Fn::GetAtt': GraphQLApi.ApiId
-      FieldName: createOrganization
-      TypeName: Mutation
-      DataSourceName:
-        'Fn::GetAtt': CreateOrganizationDataSource.Name
   CreateUnidentifiedUserRole:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -625,51 +580,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': UpdateInternalUserDataSource.Name
-  UpdateOrganizationRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: UpdateOrganizationFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateOrganizationARN
-  UpdateOrganizationDataSource:
-    Type: 'AWS::AppSync::DataSource'
-    Properties:
-      ApiId:
-        'Fn::GetAtt': GraphQLApi.ApiId
-      Name:
-        'Fn::Sub': '${EnvironmentName}UpdateOrganization'
-      Type: AWS_LAMBDA
-      LambdaConfig:
-        LambdaFunctionArn:
-          'Fn::ImportValue':
-            'Fn::Sub': >-
-              ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateOrganizationARN
-      ServiceRoleArn:
-        'Fn::GetAtt': UpdateOrganizationRole.Arn
-  UpdateOrganizationResolver:
-    Type: 'AWS::AppSync::Resolver'
-    Properties:
-      ApiId:
-        'Fn::GetAtt': GraphQLApi.ApiId
-      FieldName: updateOrganization
-      TypeName: Mutation
-      DataSourceName:
-        'Fn::GetAtt': UpdateOrganizationDataSource.Name
   UpdateUnidentifiedUserRole:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -985,96 +895,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetCompletedChatRoomsDataSource.Name
-  GetCountriesRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetCountriesFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetCountriesARN
-  GetCountriesDataSource:
-    Type: 'AWS::AppSync::DataSource'
-    Properties:
-      ApiId:
-        'Fn::GetAtt': GraphQLApi.ApiId
-      Name:
-        'Fn::Sub': '${EnvironmentName}GetCountries'
-      Type: AWS_LAMBDA
-      LambdaConfig:
-        LambdaFunctionArn:
-          'Fn::ImportValue':
-            'Fn::Sub': >-
-              ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetCountriesARN
-      ServiceRoleArn:
-        'Fn::GetAtt': GetCountriesRole.Arn
-  GetCountriesResolver:
-    Type: 'AWS::AppSync::Resolver'
-    Properties:
-      ApiId:
-        'Fn::GetAtt': GraphQLApi.ApiId
-      FieldName: getCountries
-      TypeName: Query
-      DataSourceName:
-        'Fn::GetAtt': GetCountriesDataSource.Name
-  GetGendersRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetGendersFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetGendersARN
-  GetGendersDataSource:
-    Type: 'AWS::AppSync::DataSource'
-    Properties:
-      ApiId:
-        'Fn::GetAtt': GraphQLApi.ApiId
-      Name:
-        'Fn::Sub': '${EnvironmentName}GetGenders'
-      Type: AWS_LAMBDA
-      LambdaConfig:
-        LambdaFunctionArn:
-          'Fn::ImportValue':
-            'Fn::Sub': >-
-              ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetGendersARN
-      ServiceRoleArn:
-        'Fn::GetAtt': GetGendersRole.Arn
-  GetGendersResolver:
-    Type: 'AWS::AppSync::Resolver'
-    Properties:
-      ApiId:
-        'Fn::GetAtt': GraphQLApi.ApiId
-      FieldName: getGenders
-      TypeName: Query
-      DataSourceName:
-        'Fn::GetAtt': GetGendersDataSource.Name
   GetInternalUserRole:
     Type: 'AWS::IAM::Role'
     Properties:
