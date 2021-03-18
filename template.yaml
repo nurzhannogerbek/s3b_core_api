@@ -1210,51 +1210,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetClientsDataSource.Name
-  CreateWidgetRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: CreateWidgetFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${SettingsServiceStackName}:${EnvironmentName}CreateWidgetARN
-  CreateWidgetDataSource:
-    Type: 'AWS::AppSync::DataSource'
-    Properties:
-      ApiId:
-        'Fn::GetAtt': GraphQLApi.ApiId
-      Name:
-        'Fn::Sub': '${EnvironmentName}CreateWidget'
-      Type: AWS_LAMBDA
-      LambdaConfig:
-        LambdaFunctionArn:
-          'Fn::ImportValue':
-            'Fn::Sub': >-
-              ${EnvironmentName}${SettingsServiceStackName}:${EnvironmentName}CreateWidgetARN
-      ServiceRoleArn:
-        'Fn::GetAtt': CreateWidgetRole.Arn
-  CreateWidgetResolver:
-    Type: 'AWS::AppSync::Resolver'
-    Properties:
-      ApiId:
-        'Fn::GetAtt': GraphQLApi.ApiId
-      FieldName: createWidget
-      TypeName: Mutation
-      DataSourceName:
-        'Fn::GetAtt': CreateWidgetDataSource.Name
   RequalifyClientRole:
     Type: 'AWS::IAM::Role'
     Properties:
