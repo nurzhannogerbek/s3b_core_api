@@ -299,16 +299,6 @@ type CreateUnidentifiedUserOutput @aws_api_key {
 	metadata: String
 }
 
-input CreateWidgetInput {
-	organizationId: String!
-	channelName: String!
-	channelDescription: String
-}
-
-type CreateWidgetOutput @aws_api_key {
-	widgetId: String
-}
-
 input DeleteClientsInput {
 	usersIds: [String!]!
 }
@@ -561,9 +551,6 @@ type Mutation {
 		@aws_api_key
 	# Обновлять статус сообщения и количество непрочитанных сообщений в чат комнате.
 	updateMessageData(input: UpdateMessageDataInput): UpdateMessageDataOutput
-		@aws_api_key
-	# Создать виджет с настройками.
-	createWidget(input: CreateWidgetInput): CreateWidgetOutput
 		@aws_api_key
 	# Переквалифицировать неидентифицированного пользователя в идентифицированного.
 	requalifyClient(input: RequalifyClientInput): RequalifyClientOutput
