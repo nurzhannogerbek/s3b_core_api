@@ -171,6 +171,7 @@ input CreateChatRoomInput {
 	telegramChatId: String
 	whatsappChatId: String
 	facebookMessengerChatId: String
+    instagramPrivateChatId: String
 }
 
 input CreateChatRoomMessageInput {
