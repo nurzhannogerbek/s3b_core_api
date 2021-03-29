@@ -232,6 +232,7 @@ input CreateIdentifiedUserInput {
 	telegramUsername: String
 	whatsappProfile: String
 	whatsappUsername: String
+    instagramPrivateUsername: String
 }
 
 type CreateIdentifiedUserOutput @aws_api_key {
@@ -250,6 +251,7 @@ type CreateIdentifiedUserOutput @aws_api_key {
 	telegramUsername: String
 	whatsappProfile: String
 	whatsappUsername: String
+	instagramPrivateUsername: String
 }
 
 input CreateInternalUserInput {
