@@ -74,6 +74,7 @@ type ChatRoomClientOutput @aws_api_key {
 	telegramUsername: String
 	whatsappProfile: String
 	whatsappUsername: String
+    instagramPrivateUsername: String
 }
 
 type ChatRoomMessage @aws_api_key {
@@ -128,6 +129,7 @@ type ClientOutput @aws_api_key {
 	telegramUsername: String
 	whatsappProfile: String
 	whatsappUsername: String
+    instagramPrivateUsername: String
 }
 
 type ClientsOutput @aws_api_key {
