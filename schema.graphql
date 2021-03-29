@@ -147,6 +147,7 @@ type ClientsOutput @aws_api_key {
 	telegramUsername: String
 	whatsappProfile: String
 	whatsappUsername: String
+	instagramPrivateUsername: String
 	gender: GenderOutput
 }
 
@@ -420,6 +421,7 @@ type GetClientOutput @aws_api_key {
 	telegramUsername: String
 	whatsappProfile: String
 	whatsappUsername: String
+	instagramPrivateUsername: String
 	gender: GenderOutput
 }
 
@@ -711,6 +713,7 @@ input RequalifyClientInput {
 	telegramUsername: String
 	whatsappProfile: String
 	whatsappUsername: String
+	instagramPrivateUsername: String
 }
 
 type RequalifyClientOutput @aws_api_key {
@@ -730,6 +733,7 @@ type RequalifyClientOutput @aws_api_key {
 	telegramUsername: String
 	whatsappProfile: String
 	whatsappUsername: String
+	instagramPrivateUsername: String
 	gender: GenderOutput
 }
 
@@ -814,6 +818,7 @@ input UpdateIdentifiedUserInput {
 	telegramUsername: String
 	whatsappProfile: String
 	whatsappUsername: String
+	instagramPrivateUsername: String
 }
 
 type UpdateIdentifiedUserOutput @aws_api_key {
@@ -832,6 +837,7 @@ type UpdateIdentifiedUserOutput @aws_api_key {
 	telegramUsername: String
 	whatsappProfile: String
 	whatsappUsername: String
+	instagramPrivateUsername: String
 }
 
 input UpdateInternalUserInput {
