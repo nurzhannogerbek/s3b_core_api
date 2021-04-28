@@ -28,7 +28,7 @@ Conditions:
       - Ref: EnvironmentName
       - Prod
 Resources:
-  CloudWatchLogsRole:
+  CoreApiRole:
     Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
@@ -39,14 +39,12 @@ Resources:
               Service: appsync.amazonaws.com
             Action: 'sts:AssumeRole'
       Policies:
-        - PolicyName: CloudWatchLogsAccess
+        - PolicyName: CoreApiPolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
               - Effect: Allow
-                Action:
-                  - 'logs:CreateLogStream'
-                  - 'logs:PutLogEvents'
+                Action: '*'
                 Resource: '*'
   GraphQLApi:
     Type: 'AWS::AppSync::GraphQLApi'
@@ -63,7 +61,7 @@ Resources:
         - AuthenticationType: API_KEY
       LogConfig:
         CloudWatchLogsRoleArn:
-          'Fn::GetAtt': CloudWatchLogsRole.Arn
+          'Fn::GetAtt': CoreApiRole.Arn
         ExcludeVerboseContent: false
         FieldLogLevel:
           'Fn::If':
@@ -85,27 +83,7 @@ Resources:
         'Fn::GetAtt': GraphQLApi.ApiId
       Expires:
         Ref: ApiKeyExpires
-  CreateChatRoomMessageRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: CreateChatRoomMessageFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoomMessageARN
+
   CreateChatRoomMessageDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -120,7 +98,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoomMessageARN
       ServiceRoleArn:
-        'Fn::GetAtt': CreateChatRoomMessageRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   CreateChatRoomMessageResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -130,27 +108,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': CreateChatRoomMessageDataSource.Name
-  CreateChatRoomRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: CreateChatRoomFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoomARN
   CreateChatRoomDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -165,7 +122,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CreateChatRoomARN
       ServiceRoleArn:
-        'Fn::GetAtt': CreateChatRoomRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   CreateChatRoomResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -175,27 +132,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': CreateChatRoomDataSource.Name
-  AssignChatRoomOperatorRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: AssignChatRoomOperatorFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}AssignChatRoomOperatorARN
   AssignChatRoomOperatorDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -210,7 +146,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}AssignChatRoomOperatorARN
       ServiceRoleArn:
-        'Fn::GetAtt': AssignChatRoomOperatorRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   AssignChatRoomOperatorResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -220,27 +156,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': AssignChatRoomOperatorDataSource.Name
-  CloseChatRoomRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: CloseChatRoomFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CloseChatRoomARN
   CloseChatRoomDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -255,7 +170,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}CloseChatRoomARN
       ServiceRoleArn:
-        'Fn::GetAtt': CloseChatRoomRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   CloseChatRoomResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -265,27 +180,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': CloseChatRoomDataSource.Name
-  ActivateClosedChatRoomRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: ActivateClosedChatRoomFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}ActivateClosedChatRoomARN
   ActivateClosedChatRoomDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -300,7 +194,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}ActivateClosedChatRoomARN
       ServiceRoleArn:
-        'Fn::GetAtt': ActivateClosedChatRoomRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   ActivateClosedChatRoomResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -310,27 +204,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': ActivateClosedChatRoomDataSource.Name
-  UpdateMessageSendingStatusRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: UpdateMessageSendingStatusFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageSendingStatusARN
   UpdateMessageSendingStatusDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -345,7 +218,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageSendingStatusARN
       ServiceRoleArn:
-        'Fn::GetAtt': UpdateMessageSendingStatusRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   UpdateMessageSendingStatusResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -355,27 +228,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': UpdateMessageSendingStatusDataSource.Name
-  CreateIdentifiedUserRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: CreateIdentifiedUserFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateIdentifiedUserARN
   CreateIdentifiedUserDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -390,7 +242,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateIdentifiedUserARN
       ServiceRoleArn:
-        'Fn::GetAtt': CreateIdentifiedUserRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   CreateIdentifiedUserResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -400,27 +252,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': CreateIdentifiedUserDataSource.Name
-  CreateInternalUserRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: CreateInternalUserFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateInternalUserARN
   CreateInternalUserDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -435,7 +266,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateInternalUserARN
       ServiceRoleArn:
-        'Fn::GetAtt': CreateInternalUserRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   CreateInternalUserResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -445,27 +276,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': CreateInternalUserDataSource.Name
-  CreateUnidentifiedUserRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: CreateUnidentifiedUserFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateUnidentifiedUserARN
   CreateUnidentifiedUserDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -480,7 +290,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}CreateUnidentifiedUserARN
       ServiceRoleArn:
-        'Fn::GetAtt': CreateUnidentifiedUserRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   CreateUnidentifiedUserResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -490,27 +300,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': CreateUnidentifiedUserDataSource.Name
-  UpdateIdentifiedUserRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: UpdateIdentifiedUserFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateIdentifiedUserARN
   UpdateIdentifiedUserDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -525,7 +314,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateIdentifiedUserARN
       ServiceRoleArn:
-        'Fn::GetAtt': UpdateIdentifiedUserRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   UpdateIdentifiedUserResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -535,27 +324,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': UpdateIdentifiedUserDataSource.Name
-  UpdateInternalUserRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: UpdateInternalUserFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateInternalUserARN
   UpdateInternalUserDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -570,7 +338,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateInternalUserARN
       ServiceRoleArn:
-        'Fn::GetAtt': UpdateInternalUserRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   UpdateInternalUserResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -580,27 +348,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': UpdateInternalUserDataSource.Name
-  UpdateUnidentifiedUserRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: UpdateUnidentifiedUserFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateUnidentifiedUserARN
   UpdateUnidentifiedUserDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -615,7 +362,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}UpdateUnidentifiedUserARN
       ServiceRoleArn:
-        'Fn::GetAtt': UpdateUnidentifiedUserRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   UpdateUnidentifiedUserResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -625,27 +372,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': UpdateUnidentifiedUserDataSource.Name
-  GetChatRoomMessagesRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetChatRoomMessagesFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomMessagesARN
   GetChatRoomMessagesDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -660,7 +386,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomMessagesARN
       ServiceRoleArn:
-        'Fn::GetAtt': GetChatRoomMessagesRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   GetChatRoomMessagesResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -670,27 +396,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetChatRoomMessagesDataSource.Name
-  GetChannelsTypesAndChannelsRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetChannelsTypesAndChannelsFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelsTypesAndChannelsARN
   GetChannelsTypesAndChannelsDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -705,7 +410,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelsTypesAndChannelsARN
       ServiceRoleArn:
-        'Fn::GetAtt': GetChannelsTypesAndChannelsRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   GetChannelsTypesAndChannelsResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -715,27 +420,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetChannelsTypesAndChannelsDataSource.Name
-  GetChatRoomInformationRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetChatRoomInformationFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomInformationARN
   GetChatRoomInformationDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -750,7 +434,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChatRoomInformationARN
       ServiceRoleArn:
-        'Fn::GetAtt': GetChatRoomInformationRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   GetChatRoomInformationResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -760,27 +444,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetChatRoomInformationDataSource.Name
-  GetNonAcceptedChatRoomsRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetNonAcceptedChatRoomsFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetNonAcceptedChatRoomsARN
   GetNonAcceptedChatRoomsDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -795,7 +458,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetNonAcceptedChatRoomsARN
       ServiceRoleArn:
-        'Fn::GetAtt': GetNonAcceptedChatRoomsRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   GetNonAcceptedChatRoomsResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -805,27 +468,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetNonAcceptedChatRoomsDataSource.Name
-  GetAcceptedChatRoomsRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetAcceptedChatRoomsFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetAcceptedChatRoomsARN
   GetAcceptedChatRoomsDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -840,7 +482,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetAcceptedChatRoomsARN
       ServiceRoleArn:
-        'Fn::GetAtt': GetAcceptedChatRoomsRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   GetAcceptedChatRoomsResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -850,27 +492,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetAcceptedChatRoomsDataSource.Name
-  GetCompletedChatRoomsRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetCompletedChatRoomsFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetCompletedChatRoomsARN
   GetCompletedChatRoomsDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -885,7 +506,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetCompletedChatRoomsARN
       ServiceRoleArn:
-        'Fn::GetAtt': GetCompletedChatRoomsRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   GetCompletedChatRoomsResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -895,27 +516,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetCompletedChatRoomsDataSource.Name
-  GetInternalUserRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetInternalUserFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUserARN
   GetInternalUserDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -930,7 +530,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUserARN
       ServiceRoleArn:
-        'Fn::GetAtt': GetInternalUserRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   GetInternalUserResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -940,27 +540,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetInternalUserDataSource.Name
-  GetInternalUsersRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetInternalUsersFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUsersARN
   GetInternalUsersDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -975,7 +554,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetInternalUsersARN
       ServiceRoleArn:
-        'Fn::GetAtt': GetInternalUsersRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   GetInternalUsersResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -985,27 +564,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetInternalUsersDataSource.Name
-  GetRolesRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetRolesFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetRolesARN
   GetRolesDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -1020,7 +578,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetRolesARN
       ServiceRoleArn:
-        'Fn::GetAtt': GetRolesRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   GetRolesResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -1030,27 +588,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetRolesDataSource.Name
-  GetClientRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetClientFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetClientARN
   GetClientDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -1065,7 +602,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetClientARN
       ServiceRoleArn:
-        'Fn::GetAtt': GetClientRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   GetClientResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -1075,27 +612,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetClientDataSource.Name
-  GetChannelOnlineOperatorsRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetChannelOnlineOperatorsFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelOnlineOperatorsARN
   GetChannelOnlineOperatorsDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -1110,7 +626,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetChannelOnlineOperatorsARN
       ServiceRoleArn:
-        'Fn::GetAtt': GetChannelOnlineOperatorsRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   GetChannelOnlineOperatorsResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -1120,27 +636,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetChannelOnlineOperatorsDataSource.Name
-  GetClientChatRoomsRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetClientChatRoomsFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetClientChatRoomsARN
   GetClientChatRoomsDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -1155,7 +650,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}GetClientChatRoomsARN
       ServiceRoleArn:
-        'Fn::GetAtt': GetClientChatRoomsRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   GetClientChatRoomsResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -1165,27 +660,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetClientChatRoomsDataSource.Name
-  GetClientsRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetClientsFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetClientsARN
   GetClientsDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -1200,7 +674,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetClientsARN
       ServiceRoleArn:
-        'Fn::GetAtt': GetClientsRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   GetClientsResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -1210,27 +684,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetClientsDataSource.Name
-  RequalifyClientRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: RequalifyClientFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}RequalifyClientARN
   RequalifyClientDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -1245,7 +698,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}RequalifyClientARN
       ServiceRoleArn:
-        'Fn::GetAtt': RequalifyClientRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   RequalifyClientResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -1255,27 +708,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': RequalifyClientDataSource.Name
-  DeleteClientsRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: DeleteClientsFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}DeleteClientsARN
   DeleteClientsDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -1290,7 +722,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}DeleteClientsARN
       ServiceRoleArn:
-        'Fn::GetAtt': DeleteClientsRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   DeleteClientsResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -1300,27 +732,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': DeleteClientsDataSource.Name
-  DeleteInternalUsersRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: DeleteInternalUsersFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}DeleteInternalUsersARN
   DeleteInternalUsersDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -1335,7 +746,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}DeleteInternalUsersARN
       ServiceRoleArn:
-        'Fn::GetAtt': DeleteInternalUsersRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   DeleteInternalUsersResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -1345,27 +756,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': DeleteInternalUsersDataSource.Name
-  GetDeletedInternalUsersRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: GetDeletedInternalUsersFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetDeletedInternalUsersARN
   GetDeletedInternalUsersDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -1380,7 +770,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}GetDeletedInternalUsersARN
       ServiceRoleArn:
-        'Fn::GetAtt': GetDeletedInternalUsersRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   GetDeletedInternalUsersResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -1390,27 +780,6 @@ Resources:
       TypeName: Query
       DataSourceName:
         'Fn::GetAtt': GetDeletedInternalUsersDataSource.Name
-  RestoreDeletedInternalUsersRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: RestoreDeletedInternalUsersFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}RestoreDeletedInternalUsersARN
   RestoreDeletedInternalUsersDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -1425,7 +794,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${UserServiceStackName}:${EnvironmentName}RestoreDeletedInternalUsersARN
       ServiceRoleArn:
-        'Fn::GetAtt': RestoreDeletedInternalUsersRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   RestoreDeletedInternalUsersResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
@@ -1435,27 +804,6 @@ Resources:
       TypeName: Mutation
       DataSourceName:
         'Fn::GetAtt': RestoreDeletedInternalUsersDataSource.Name
-  UpdateMessageDataRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: UpdateMessageDataFunctionAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'lambda:InvokeFunction'
-                Resource:
-                  'Fn::ImportValue':
-                    'Fn::Sub': >-
-                      ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageDataARN
   UpdateMessageDataDataSource:
     Type: 'AWS::AppSync::DataSource'
     Properties:
@@ -1470,7 +818,7 @@ Resources:
             'Fn::Sub': >-
               ${EnvironmentName}${ChatServiceStackName}:${EnvironmentName}UpdateMessageDataARN
       ServiceRoleArn:
-        'Fn::GetAtt': UpdateMessageDataRole.Arn
+        'Fn::GetAtt': CoreApiRole.Arn
   UpdateMessageDataResolver:
     Type: 'AWS::AppSync::Resolver'
     Properties:
