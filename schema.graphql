@@ -75,6 +75,7 @@ type ChatRoomClientOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
     instagramPrivateUsername: String
+    vkUserId: String
 }
 
 type ChatRoomMessage @aws_api_key {
@@ -130,6 +131,7 @@ type ClientOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
     instagramPrivateUsername: String
+    vkUserId: String
 }
 
 type ClientsOutput @aws_api_key {
@@ -150,6 +152,7 @@ type ClientsOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
 	instagramPrivateUsername: String
+	vkUserId: String
 	gender: GenderOutput
 }
 
@@ -237,6 +240,7 @@ input CreateIdentifiedUserInput {
 	whatsappProfile: String
 	whatsappUsername: String
     instagramPrivateUsername: String
+    vkUserId: String
 }
 
 type CreateIdentifiedUserOutput @aws_api_key {
@@ -256,6 +260,7 @@ type CreateIdentifiedUserOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
 	instagramPrivateUsername: String
+	vkUserId: String
 }
 
 input CreateInternalUserInput {
@@ -425,6 +430,7 @@ type GetClientOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
 	instagramPrivateUsername: String
+    vkUserId: String
 	gender: GenderOutput
 }
 
@@ -717,6 +723,7 @@ input RequalifyClientInput {
 	whatsappProfile: String
 	whatsappUsername: String
 	instagramPrivateUsername: String
+	vkUserId: String
 }
 
 type RequalifyClientOutput @aws_api_key {
@@ -737,6 +744,7 @@ type RequalifyClientOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
 	instagramPrivateUsername: String
+	vkUserId: String
 	gender: GenderOutput
 }
 
@@ -822,6 +830,7 @@ input UpdateIdentifiedUserInput {
 	whatsappProfile: String
 	whatsappUsername: String
 	instagramPrivateUsername: String
+	vkUserId: String
 }
 
 type UpdateIdentifiedUserOutput @aws_api_key {
@@ -841,6 +850,7 @@ type UpdateIdentifiedUserOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
 	instagramPrivateUsername: String
+	vkUserId: String
 }
 
 input UpdateInternalUserInput {
