@@ -75,6 +75,8 @@ type ChatRoomClientOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
     instagramPrivateUsername: String
+    vkUserId: String
+    instagramProfile: String
 }
 
 type ChatRoomMessage @aws_api_key {
@@ -130,6 +132,8 @@ type ClientOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
     instagramPrivateUsername: String
+    vkUserId: String
+    instagramProfile: String
 }
 
 type ClientsOutput @aws_api_key {
@@ -150,6 +154,8 @@ type ClientsOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
 	instagramPrivateUsername: String
+	vkUserId: String
+	instagramProfile: String
 	gender: GenderOutput
 }
 
@@ -175,6 +181,7 @@ input CreateChatRoomInput {
 	whatsappChatId: String
 	facebookMessengerChatId: String
     instagramPrivateChatId: String
+    vkChatId: String
 }
 
 input CreateChatRoomMessageInput {
@@ -236,6 +243,8 @@ input CreateIdentifiedUserInput {
 	whatsappProfile: String
 	whatsappUsername: String
     instagramPrivateUsername: String
+    vkUserId: String
+    instagramProfile: String
 }
 
 type CreateIdentifiedUserOutput @aws_api_key {
@@ -255,6 +264,8 @@ type CreateIdentifiedUserOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
 	instagramPrivateUsername: String
+	vkUserId: String
+	instagramProfile: String
 }
 
 input CreateInternalUserInput {
@@ -424,6 +435,8 @@ type GetClientOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
 	instagramPrivateUsername: String
+    vkUserId: String
+    instagramProfile: String
 	gender: GenderOutput
 }
 
@@ -716,6 +729,8 @@ input RequalifyClientInput {
 	whatsappProfile: String
 	whatsappUsername: String
 	instagramPrivateUsername: String
+	vkUserId: String
+	instagramProfile: String
 }
 
 type RequalifyClientOutput @aws_api_key {
@@ -736,6 +751,8 @@ type RequalifyClientOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
 	instagramPrivateUsername: String
+	vkUserId: String
+	instagramProfile: String
 	gender: GenderOutput
 }
 
@@ -821,6 +838,8 @@ input UpdateIdentifiedUserInput {
 	whatsappProfile: String
 	whatsappUsername: String
 	instagramPrivateUsername: String
+	vkUserId: String
+	instagramProfile: String
 }
 
 type UpdateIdentifiedUserOutput @aws_api_key {
@@ -840,6 +859,8 @@ type UpdateIdentifiedUserOutput @aws_api_key {
 	whatsappProfile: String
 	whatsappUsername: String
 	instagramPrivateUsername: String
+	vkUserId: String
+	instagramProfile: String
 }
 
 input UpdateInternalUserInput {
