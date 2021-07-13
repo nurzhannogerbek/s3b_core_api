@@ -182,6 +182,7 @@ input CreateChatRoomInput {
 	facebookMessengerChatId: String
     instagramPrivateChatId: String
     vkChatId: String
+    instagramChatId: String
 }
 
 input CreateChatRoomMessageInput {
